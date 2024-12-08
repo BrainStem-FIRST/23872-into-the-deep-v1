@@ -82,6 +82,8 @@ public class RedSideYellowBlocks extends LinearOpMode {
         telemetry.addLine("Robot Ready");
         telemetry.update();
 
+        robot.lift.reset();
+
         waitForStart();
 
         Actions.runBlocking(

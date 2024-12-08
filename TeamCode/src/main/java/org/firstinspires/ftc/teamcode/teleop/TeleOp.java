@@ -18,9 +18,11 @@ import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositGripSequenceCo
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositReleaseSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenHighBarSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.GrabSpecimenSequenceCommand;
+import org.firstinspires.ftc.teamcode.teleop.commandGroups.ResetLiftCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
+import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftResetCommand;
 import org.firstinspires.ftc.teamcode.util.Drawing;
 
 public class TeleOp extends LinearOpMode {
@@ -72,6 +74,13 @@ public class TeleOp extends LinearOpMode {
         }
         if (gamepad2.y) {
             new DepositSpecimenHighBarSequenceCommand(robot, telemetry).schedule();
+        }
+
+        if (gamepad2.x) {
+            new ResetLiftCommand(robot, telemetry).schedule();
+        } else if (gamepad2.b) {
+            robot.lift.reset();
+            robot.lift.setDeconflict();
         }
     }
 

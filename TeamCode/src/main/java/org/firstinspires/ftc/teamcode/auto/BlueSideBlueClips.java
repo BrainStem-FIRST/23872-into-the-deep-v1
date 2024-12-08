@@ -38,10 +38,10 @@ public class BlueSideBlueClips extends LinearOpMode {
                 .splineToLinearHeading(depositPose, Math.toRadians(210));
 
         Action depositPreloadApproach = depositPreloadTrajectory.build();
-        Actions.runBlocking(
-                robot.depositor.closeClaw(),
-                robot.depositor.gotoBackward(),
-                robot.lift.setSpecimenLevel(),
+//        Actions.runBlocking(
+//                robot.depositor.closeClaw(),
+//                robot.depositor.gotoBackward(),
+//                robot.lift.setSpecimenLevel(),
 
         telemetry.addLine("Robot Ready");
         telemetry.update();

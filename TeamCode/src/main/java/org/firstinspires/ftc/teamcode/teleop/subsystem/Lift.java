@@ -32,6 +32,7 @@ public class Lift implements Component {
         public int TOLERANCE = 20;
         public double MAX_POWER_UP = 0.2;
         public double MAX_POWER_DOWN = -0.1;
+        public long RESET_TIME = 500;
     }
 
     PIDController liftController;
@@ -51,7 +52,7 @@ public class Lift implements Component {
         ///liftState = LiftState.SPECIMEN_LEVEL;
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -75,17 +76,23 @@ public class Lift implements Component {
 
     @Override
     public void reset() {
-//        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     private void setTarget(double target) {
         liftController.setTarget(target);
     }
 
+    private void liftDown() {
+        setTarget(0);
+        setMotorPower(PARAMS.MAX_POWER_DOWN);
+    }
+
     private void selectState() {
         switch (liftState) {
             case RESET:
-                reset();
+                liftDown();
                 break;
 
             case GRAB:
@@ -166,6 +173,10 @@ public class Lift implements Component {
         telemetry.addData("liftMotor Power", liftMotor.getPower());
         telemetry.addData("Lift State", liftState);
 
+    }
+
+    public void setReset() {
+        liftState = LiftState.RESET;
     }
 
     public void setBase() {
