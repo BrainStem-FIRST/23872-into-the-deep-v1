@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.auto.subsystem.Depositor;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 
@@ -38,8 +39,9 @@ public class BlueSideBlueClips extends LinearOpMode {
 
         Action depositPreloadApproach = depositPreloadTrajectory.build();
         Actions.runBlocking(
-                robot.depositor.closeClaw()
-        );
+                robot.depositor.closeClaw(),
+                robot.depositor.gotoBackward(),
+                robot.lift.setSpecimenLevel(),
 
         telemetry.addLine("Robot Ready");
         telemetry.update();
@@ -48,6 +50,7 @@ public class BlueSideBlueClips extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+
                         new ParallelAction(
                                 depositPreloadApproach
                         )
