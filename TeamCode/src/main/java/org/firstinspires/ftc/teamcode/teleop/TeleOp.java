@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -23,15 +24,21 @@ import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftResetCommand;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
 import org.firstinspires.ftc.teamcode.util.Drawing;
 
 public class TeleOp extends LinearOpMode {
+    ResetLiftCommand resetLiftCommand;
+    ElapsedTime timer;
+    boolean resetInProgress = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap);
+        resetLiftCommand = new ResetLiftCommand(robot, telemetry);
+        timer = new ElapsedTime();
 
         waitForStart();
 
@@ -78,9 +85,15 @@ public class TeleOp extends LinearOpMode {
 
         if (gamepad2.x) {
             new ResetLiftCommand(robot, telemetry).schedule();
-        } else if (gamepad2.b) {
+        } else if (gamepad2.b && !resetInProgress) {
+            timer.reset();
             robot.lift.reset();
+            resetInProgress = true;
+        } else if (gamepad2.b &&
+                (robot.lift.liftState == Lift.LiftState.RESET) &&
+                resetInProgress) {
             robot.lift.setDeconflict();
+            resetInProgress = false;
         }
     }
 

@@ -31,7 +31,7 @@ public class Lift implements Component {
         public int HIGHBAR_PRE_HEIGHT = 250;
         public int TOLERANCE = 20;
         public double MAX_POWER_UP = 0.2;
-        public double MAX_POWER_DOWN = -0.1;
+        public double MAX_POWER_DOWN = -0.25;
         public long RESET_TIME = 500;
     }
 

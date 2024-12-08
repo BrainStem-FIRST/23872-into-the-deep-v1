@@ -12,6 +12,7 @@ public class LiftResetCommand extends CommandBase {
     Lift lift;
     Telemetry telemetry;
     ElapsedTime timer = new ElapsedTime();
+    boolean isFinished = false;
 
 
 
@@ -23,15 +24,13 @@ public class LiftResetCommand extends CommandBase {
     @Override
     public void initialize() {
         lift.setReset();
-        timer.reset();
     }
 
     public void execute() {
-
     }
 
     @Override
     public boolean isFinished() {
-        return timer.milliseconds() > lift.PARAMS.RESET_TIME;
+        return true;
     }
 }

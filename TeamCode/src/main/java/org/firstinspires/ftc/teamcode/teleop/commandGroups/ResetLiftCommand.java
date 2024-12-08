@@ -18,7 +18,6 @@ public class ResetLiftCommand extends SequentialCommandGroup {
     public ResetLiftCommand(BrainSTEMRobot robot, Telemetry telemetry) {
         super(
                 new GripperOpenCommand(robot.depositor, telemetry),
-                new WaitCommand(250),
                 new DepositorDownCommand(robot.depositor, telemetry),
                 new WaitCommand(250),
                 new LiftResetCommand(robot.lift, telemetry)
