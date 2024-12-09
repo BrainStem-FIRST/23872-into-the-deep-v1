@@ -33,9 +33,9 @@ public class Extension implements Component {
 
         public int TOLERANCE = 40;
 
-        public static final int EXTENSION_MAX = 900;
-        public static final int EXTENSION_LEFT_BLOCK = 575;
-        public static final int EXTENSION_CENTER_BLOCK = 600;
+        public static final int EXTENSION_MAX = 600;
+        public static final int EXTENSION_LEFT_BLOCK = 475;
+        public static final int EXTENSION_CENTER_BLOCK = 400;
         public static final int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static final int RETRACT_POSITION = 0;
@@ -220,21 +220,14 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < target) {
+            if (extension.getCurrentPosition() < 400) {
                 extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
-            } else {
-                extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                setMotorPower(0);
             }
 
-            telemetry.addData("Extension Target", target);
-            telemetry.addData("Extension Position", extension.getCurrentPosition());
-            telemetry.addData("Extension Power", extension.getPower());
-            telemetry.addData("Extension InTolerance", inTolerance());
+            update();
 
-
-            return extension.getCurrentPosition() < target;
+            return !inTolerance();
         }
     }
 
@@ -253,21 +246,14 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < target) {
+            if (extension.getCurrentPosition() < 350) {
                 extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
-            } else {
-                extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                setMotorPower(0);
             }
 
-            telemetry.addData("Extension Target", target);
-            telemetry.addData("Extension Position", extension.getCurrentPosition());
-            telemetry.addData("Extension Power", extension.getPower());
-            telemetry.addData("Extension InTolerance", inTolerance());
+            update();
 
-
-            return extension.getCurrentPosition() < target;
+            return !inTolerance();
         }
     }
 

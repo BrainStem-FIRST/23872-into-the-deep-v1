@@ -206,13 +206,13 @@ public class Lift implements Component {
                 liftMotor.setPower(1.0);
             }
 
-            if (liftMotor.getCurrentPosition() > 750) {
-                update();
-            }
+//            if (liftMotor.getCurrentPosition() > 1000) {
+//                update();
+//            }
 
             packet.put("Lift Pos", liftMotor.getCurrentPosition());
 
-            return liftMotor.getCurrentPosition() > 1000;
+            return liftMotor.getCurrentPosition() < 600;
         }
     }
 

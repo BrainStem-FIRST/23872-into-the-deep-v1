@@ -2,37 +2,29 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TimeTurn;
-import com.acmerobotics.roadrunner.Trajectory;
-import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 
-@Autonomous(name="Red - Yellow Blocks", group="Hippos")
-public class RedSideYellowBlocks extends LinearOpMode {
+@Autonomous(name="Yellow Blocks", group="Hippos")
+public class YellowBlocks extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
-        Pose2d depositPose = new Pose2d(-60, -61, Math.toRadians(35));
-        Pose2d rightBlockPose = new Pose2d(-53, -55, Math.toRadians(85));
-        Pose2d centerBlockPose = new Pose2d(-55, -55, Math.toRadians(100));
-        Pose2d leftBlockPose = new Pose2d(-49, -50, Math.toRadians(130));
-        Pose2d parkPose = new Pose2d(-24, 0, Math.toRadians(90));
+        Pose2d depositPose = new Pose2d(-59, -59, Math.toRadians(50));
+        Pose2d rightBlockPose = new Pose2d(-47, -49, Math.toRadians(90));
+        Pose2d centerBlockPose = new Pose2d(-59, -45, Math.toRadians(92));
+        Pose2d leftBlockPose = new Pose2d(-52, -32, Math.toRadians(160));
+        Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, beginPose);
         PinpointDrive drive = robot.drive;
@@ -45,15 +37,15 @@ public class RedSideYellowBlocks extends LinearOpMode {
                 .splineToLinearHeading(rightBlockPose, Math.toRadians(75));
 
         TrajectoryActionBuilder centerBlockTrajectory = drive.actionBuilder(depositPose)
-                .splineToLinearHeading(centerBlockPose, Math.toRadians(100));
+                .splineToLinearHeading(centerBlockPose, Math.toRadians(90));
 
         TrajectoryActionBuilder leftBlockTrajectory = drive.actionBuilder(depositPose)
                 .setReversed(true)
-                .splineToLinearHeading(leftBlockPose, Math.toRadians(100));
+                .splineToLinearHeading(leftBlockPose, Math.toRadians(110));
 
         TrajectoryActionBuilder depositRightBlockTrajectory = drive.actionBuilder(rightBlockPose)
                 .setReversed(true)
-                .splineToLinearHeading(depositPose, Math.toRadians(225));
+                .splineToLinearHeading(depositPose, Math.toRadians(210));
 
         TrajectoryActionBuilder depositCenterBlockTrajectory = drive.actionBuilder(centerBlockPose)
                 .setReversed(true)
@@ -111,7 +103,7 @@ public class RedSideYellowBlocks extends LinearOpMode {
                         robot.depositor.gotoDown(),
                         robot.extension.gotoMax(),
                         robot.collector.collectorInAction(),
-                        new SleepAction(1.5),
+                        new SleepAction(1.0),
                         robot.collector.collectorOffAction(),
                         robot.extension.gotoRetract(),
 
@@ -144,7 +136,7 @@ public class RedSideYellowBlocks extends LinearOpMode {
                         robot.depositor.gotoDown(),
                         robot.extension.gotoCenterBlock(),
                         robot.collector.collectorInAction(),
-                        new SleepAction(3.0),
+                        new SleepAction(1.0),
                         robot.collector.collectorOffAction(),
                         robot.extension.gotoRetract(),
 
@@ -180,20 +172,19 @@ public class RedSideYellowBlocks extends LinearOpMode {
                                 robot.extension.gotoLeftBlock()
                         ),
 
-                        new SleepAction(2.0),
+                        new SleepAction(1.0),
                         robot.collector.collectorOffAction(),
                         robot.extension.gotoRetract(),
 
                         // DEPOSIT SEQUENCE
                         robot.lift.gotoGrab(),
                         robot.depositor.closeClaw(),
-                        new SleepAction(0.45),
+                        new SleepAction(0.35),
                         robot.lift.gotoDeconflict(),
-                        new SleepAction(1.0),
                         robot.depositor.gotoUp(),
-                        new SleepAction(0.5),
+                        new SleepAction(0.25),
                         robot.lift.gotoHighBasket(),
-                        new SleepAction(0.5),
+                        new SleepAction(0.25),
                         depositRightBlock,
 
                         // RETRACT SEQUENCE
@@ -205,7 +196,14 @@ public class RedSideYellowBlocks extends LinearOpMode {
                         new SleepAction(0.75),
 
                         // PARK
-                        park
+                        new ParallelAction(
+                                park,
+                                robot.lift.gotoDeconflict(),
+                                robot.depositor.gotoDown(),
+                                robot.depositor.openClaw()
+                        ),
+                        robot.extension.gotoLeftBlock()
+
                 )
         );
 

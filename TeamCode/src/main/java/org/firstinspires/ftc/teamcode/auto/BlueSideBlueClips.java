@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.teamcode.auto.subsystem.Depositor;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 
+@Disabled
 @Autonomous(name="Blue - Blue Clips", group="Hippos")
 public class BlueSideBlueClips extends LinearOpMode {
     @Override
