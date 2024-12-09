@@ -212,7 +212,7 @@ public class Lift implements Component {
 
             packet.put("Lift Pos", liftMotor.getCurrentPosition());
 
-            return liftMotor.getCurrentPosition() < 600;
+            return liftMotor.getCurrentPosition() < 500;
         }
     }
 

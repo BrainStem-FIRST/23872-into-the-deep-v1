@@ -66,7 +66,7 @@ public class Extension implements Component {
         extensionController.setOutputBounds(-1.0, 1.0);
         extension = new CachingMotor(map.get(DcMotorEx.class, "extension"));
         extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extensionLimitSwitch = hwMap.get(DigitalChannel.class, "eLimitSwitch");
     }

@@ -34,8 +34,8 @@ public class Extension implements Component {
         public int TOLERANCE = 40;
 
         public static final int EXTENSION_MAX = 600;
-        public static final int EXTENSION_LEFT_BLOCK = 475;
-        public static final int EXTENSION_CENTER_BLOCK = 400;
+        public static final int EXTENSION_LEFT_BLOCK = 385;
+        public static final int EXTENSION_CENTER_BLOCK = 445;
         public static final int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static final int RETRACT_POSITION = 0;
@@ -194,7 +194,7 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < 450) {
+            if (extension.getCurrentPosition() < target - 50) {
                 extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
             }
@@ -220,7 +220,7 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < 400) {
+            if (extension.getCurrentPosition() < target - 50) {
                 extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
             }
@@ -246,7 +246,7 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < 350) {
+            if (extension.getCurrentPosition() < target - 50) {
                 extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
             }
@@ -273,8 +273,8 @@ public class Extension implements Component {
                 setMotorPower(-1.0);
             }
 
-            if (extension.getCurrentPosition() < 50) {
-                setMotorPower(-0.02);
+            if (extension.getCurrentPosition() < 45) {
+                setMotorPower(-0.2);
                 continueRunning = false;
             }
 
