@@ -66,7 +66,7 @@ public class Extension implements Component {
         extensionController.setOutputBounds(-1.0, 1.0);
         extension = new CachingMotor(map.get(DcMotorEx.class, "extension"));
         extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extensionLimitSwitch = hwMap.get(DigitalChannel.class, "eLimitSwitch");
     }
@@ -100,10 +100,11 @@ public class Extension implements Component {
     }
 
     public void setRetract(){
+        telemetry.addData("Extension State set", "RETRACT");
         extensionState = ExtensionState.RETRACT;
     }
 
-    public void setCustom(){extensionState = ExtensionState.CUSTOM;}
+    public void setCustom(){ extensionState = ExtensionState.CUSTOM;}
 
 
     public void incrementOut(){
@@ -138,14 +139,19 @@ public class Extension implements Component {
     private void selectState() {
         switch (extensionState) {
             case RETRACT:
-                if (isExtensionLimit()) {
-                    extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    target = 0;
-                    setCustom();
-                } else {
+//                if (isExtensionLimit()) {
+//                    extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//                    extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                    target = 0;
+//                    setCustom();
+//                } else {
+
+                if (extension.getCurrentPosition() > 35) {
                     setMotorPower(-1.0);
+                } else {
+                    setMotorPower(-0.2);
                 }
+//                }
                 break;
 
             case OFF:
@@ -175,11 +181,12 @@ public class Extension implements Component {
     @Override
     public void update() {
         selectState();
-//        telemetry.addData("Extension Position", extension.getCurrentPosition());
-//        telemetry.addData("Extension Power", extension.getPower());
-//        telemetry.addData("Extension Limit", isExtensionLimit());
-//        telemetry.addData("Extension State", extensionState);
-//        telemetry.addData("Extension Target", target);
+        telemetry.addData("Extension Position", extension.getCurrentPosition());
+        telemetry.addData("Extension Power", extension.getPower());
+        telemetry.addData("Extension Limit", isExtensionLimit());
+        telemetry.addData("Extension State", extensionState);
+        telemetry.addData("Extension Target", target);
+        telemetry.addData("Ext Limit", isExtensionLimit());
     }
 
     public String test() {

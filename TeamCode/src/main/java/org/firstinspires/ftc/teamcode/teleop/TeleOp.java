@@ -31,6 +31,7 @@ public class TeleOp extends LinearOpMode {
     ResetLiftCommand resetLiftCommand;
     ElapsedTime timer;
     boolean resetInProgress = false;
+    boolean extensionResetInProgress = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -64,8 +65,8 @@ public class TeleOp extends LinearOpMode {
             robot.extension.incrementOut();
             robot.extension.setCustom();
         } else if (gamepad1.dpad_down) {
-            robot.extension.setCustom();
             robot.extension.incrementIn();
+            robot.extension.setCustom();
         }
 
         if (gamepad1.x) {

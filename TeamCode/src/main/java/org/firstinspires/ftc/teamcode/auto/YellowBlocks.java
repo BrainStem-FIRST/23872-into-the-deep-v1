@@ -201,8 +201,8 @@ public class YellowBlocks extends LinearOpMode {
                                 park,
                                 robot.depositor.gotoDown(),
                                 robot.depositor.openClaw()
-                        ),
-                        robot.extension.gotoLeftBlock()
+                        )
+//                        robot.extension.gotoLeftBlock()
 
                 )
         );
