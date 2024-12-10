@@ -3,18 +3,11 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.drivetrain.PIDDrivetrain;
-import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositGripSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositReleaseSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenHighBarSequenceCommand;
@@ -23,14 +16,13 @@ import org.firstinspires.ftc.teamcode.teleop.commandGroups.ResetLiftCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
-import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftResetCommand;
 import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
 import org.firstinspires.ftc.teamcode.util.Drawing;
 
 public class TeleOp extends LinearOpMode {
     ResetLiftCommand resetLiftCommand;
     ElapsedTime timer;
-    boolean resetInProgress = false;
+    boolean liftResetInProgress = false;
     boolean extensionResetInProgress = false;
 
     @Override
@@ -69,8 +61,13 @@ public class TeleOp extends LinearOpMode {
             robot.extension.setCustom();
         }
 
-        if (gamepad1.x) {
+        if (gamepad1.x && !extensionResetInProgress) {
             robot.extension.setRetract();
+            extensionResetInProgress = true;
+        } else if (extensionResetInProgress && !gamepad1.x) {
+            extensionResetInProgress = false;
+            robot.extension.reset();
+            robot.extension.setCustom();
         }
     }
 
@@ -84,17 +81,13 @@ public class TeleOp extends LinearOpMode {
             new DepositSpecimenHighBarSequenceCommand(robot, telemetry).schedule();
         }
 
-        if (gamepad2.x) {
+        if (gamepad2.x && !liftResetInProgress) {
             new ResetLiftCommand(robot, telemetry).schedule();
-        } else if (gamepad2.b && !resetInProgress) {
-            timer.reset();
+            liftResetInProgress = true;
+        } else if (liftResetInProgress && !gamepad2.x) {
+            liftResetInProgress = false;
             robot.lift.reset();
-            resetInProgress = true;
-        } else if (gamepad2.b &&
-                (robot.lift.liftState == Lift.LiftState.RESET) &&
-                resetInProgress) {
             robot.lift.setDeconflict();
-            resetInProgress = false;
         }
     }
 

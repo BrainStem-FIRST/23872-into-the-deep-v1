@@ -125,7 +125,9 @@ public class Extension implements Component {
     // placeholder function
     @Override
     public void reset() {
-
+        target = 0;
+        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public boolean isExtensionLimit() {
@@ -146,11 +148,11 @@ public class Extension implements Component {
 //                    setCustom();
 //                } else {
 
-                if (extension.getCurrentPosition() > 35) {
+//                if (extension.getCurrentPosition() > 35) {
                     setMotorPower(-1.0);
-                } else {
-                    setMotorPower(-0.2);
-                }
+//                } else {
+//                    setMotorPower(-0.2);
+//                }
 //                }
                 break;
 
