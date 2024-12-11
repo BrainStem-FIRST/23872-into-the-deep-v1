@@ -21,7 +21,7 @@ public class DepositReleaseSequenceCommand extends SequentialCommandGroup {
     public DepositReleaseSequenceCommand(BrainSTEMRobot robot, Telemetry telemetry){
         super(
                 new GripperOpenCommand(robot.depositor, telemetry),
-                new WaitCommand(500),
+                new WaitCommand(250),
                 new DepositorUpCommand(robot.depositor, telemetry),
                 new LiftDeconflictCommand(robot.lift, telemetry),
                 new DepositorDownCommand(robot.depositor, telemetry)

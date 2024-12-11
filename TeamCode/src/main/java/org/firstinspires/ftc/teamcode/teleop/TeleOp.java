@@ -10,10 +10,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositGripSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositReleaseSequenceCommand;
+import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenBlockCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenHighBarSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.GrabSpecimenSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.ResetLiftCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
+import org.firstinspires.ftc.teamcode.teleop.commands.gripperCommands.GripperOpenCommand;
+import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftGrabCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
@@ -116,6 +119,10 @@ public class TeleOp extends LinearOpMode {
         } else if (gamepad2.right_trigger > 0.5) {
             new SpecimenPreDeposit(robot, telemetry).schedule();
 
+        }
+
+        if (gamepad2.a) {
+            new DepositSpecimenBlockCommand(robot,telemetry).schedule();
         }
     }
 
