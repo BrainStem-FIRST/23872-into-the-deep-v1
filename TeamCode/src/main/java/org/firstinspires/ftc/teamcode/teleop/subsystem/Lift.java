@@ -24,7 +24,7 @@ public class Lift implements Component {
         public int GRAB_HEIGHT = 20;
         public int LOW_BASKET_HEIGHT = 650;
         public int HIGH_BASKET_HEIGHT = 1100;
-        public int SPECIMEN_LEVEL_HEIGHT = 80;
+        public int SPECIMEN_LEVEL_HEIGHT = 75;
         public int LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT = 250;
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 800;
         public int HIGH_BAR_HEIGHT = 630;
