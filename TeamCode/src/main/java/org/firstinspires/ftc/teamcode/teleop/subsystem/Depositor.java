@@ -19,8 +19,8 @@ public class Depositor implements Component {
         public double depositorNeutralPosition = 0.5;
         public double gripperClosedPosition = 0.99;
         public double gripperOpenedPosition = 0.075;
-        public double gripperLowerPWM = 1500;
-        public double gripperUpperPWM = 2620;
+        public double gripperLowerPWM = 100;
+        public double gripperUpperPWM = 2400;
 
         public final static int GRIPPER_OPEN_TIME_MS = 250;
         public final static int GRIPPER_CLOSE_TIME_MS = 250;
