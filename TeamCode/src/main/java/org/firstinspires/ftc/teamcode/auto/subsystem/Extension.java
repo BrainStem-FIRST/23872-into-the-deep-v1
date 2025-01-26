@@ -34,7 +34,7 @@ public class Extension implements Component {
         public int TOLERANCE = 40;
 
         public static final int EXTENSION_MAX = 600;
-        public static final int EXTENSION_LEFT_BLOCK = 385;
+        public static final int EXTENSION_LEFT_BLOCK = 295;
         public static final int EXTENSION_CENTER_BLOCK = 445;
         public static final int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;

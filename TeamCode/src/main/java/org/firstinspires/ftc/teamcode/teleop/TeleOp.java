@@ -96,9 +96,9 @@ public class TeleOp extends LinearOpMode {
 
     private void driver1CollectorControls(BrainSTEMRobot robot){
 
-        if (gamepad1.a) {
+        if (gamepad1.b) {
             robot.collector.setIntake();
-        } else if (gamepad1.b) {
+        } else if (gamepad1.a) {
             robot.collector.setEject();
         }
         else {

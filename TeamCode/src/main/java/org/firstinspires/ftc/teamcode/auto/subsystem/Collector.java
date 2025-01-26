@@ -77,11 +77,11 @@ public class Collector implements Component {
         collectorMotor.setPower(0.0);
     }
 
-    private void collectorIn() {
+    private void collectorOut() {
         collectorMotor.setPower(1.0);
     }
 
-    private void collectorOut() {
+    private void collectorIn() {
         collectorMotor.setPower(-0.99);
     }
 
