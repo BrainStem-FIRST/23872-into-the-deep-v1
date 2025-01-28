@@ -21,7 +21,7 @@ public class Lift implements Component {
 
         public int BASE_HEIGHT = 25;
         public int DECONFLICT_HEIGHT = 200;
-        public int GRAB_HEIGHT = 40;
+        public int GRAB_HEIGHT = 25;
         public int LOW_BASKET_HEIGHT = 650;
         public int HIGH_BASKET_HEIGHT = 1100;
         public int SPECIMEN_LEVEL_HEIGHT = 75;
@@ -51,7 +51,7 @@ public class Lift implements Component {
         liftState = LiftState.DECONFLICT;
         ///liftState = LiftState.SPECIMEN_LEVEL;
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
