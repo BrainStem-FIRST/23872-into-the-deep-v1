@@ -24,10 +24,6 @@ import org.firstinspires.ftc.teamcode.util.Drawing;
 
 @TeleOp(name="Lift Testing TeleOp", group="Hippos")
 public class LiftTestingTeleOp extends LinearOpMode {
-    ResetLiftCommand resetLiftCommand;
-    ElapsedTime timer;
-    boolean liftResetInProgress = false;
-    boolean extensionResetInProgress = false;
     public Lift lift;
 
     @Override
