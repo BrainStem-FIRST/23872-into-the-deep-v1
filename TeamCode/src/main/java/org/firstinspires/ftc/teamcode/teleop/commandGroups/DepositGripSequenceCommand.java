@@ -23,12 +23,12 @@ public class DepositGripSequenceCommand extends SequentialCommandGroup {
         super(
                 new GripperOpenCommand(robot.depositor,telemetry),
                 new DepositorDownCommand(robot.depositor,telemetry),
-                new LiftGrabCommand(robot.lift,telemetry)
-               // new WaitCommand(500),
-               // new GripperCloseCommand(robot.depositor,telemetry),
-               // new WaitCommand(500),
-               // new LiftDeconflictCommand(robot.lift,telemetry),
-               // new DepositorHighBasketCommand(robot.depositor,telemetry)
+                new LiftGrabCommand(robot.lift,telemetry),
+                new WaitCommand(500),
+                new GripperCloseCommand(robot.depositor,telemetry),
+                new WaitCommand(500),
+                new LiftDeconflictCommand(robot.lift,telemetry),
+                new DepositorHighBasketCommand(robot.depositor,telemetry)
         );
     }
 }

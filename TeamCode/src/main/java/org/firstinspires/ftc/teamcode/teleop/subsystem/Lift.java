@@ -14,14 +14,14 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 public class Lift implements Component {
     public static class Params {
         ;
-        public double liftKp = 0.03;
+        public double liftKp = 0.01;
         public double liftKi = 0.0;
         public double liftKd = 0.0;
         public double liftKs = 0.0;
 
         public int BASE_HEIGHT = 25;
         public int DECONFLICT_HEIGHT = 200;
-        public int GRAB_HEIGHT = 25;
+        public int GRAB_HEIGHT = 20;
         public int LOW_BASKET_HEIGHT = 650;
         public int HIGH_BASKET_HEIGHT = 1100;
         public int SPECIMEN_LEVEL_HEIGHT = 75;
@@ -161,7 +161,7 @@ public class Lift implements Component {
         double power;
 
         if(liftState == LiftState.HIGH_BAR) {
-            power = 1.0;
+            power = 0.3;
         } else {
             power = getControlPower();
         }
@@ -172,6 +172,7 @@ public class Lift implements Component {
         telemetry.addData("liftMotor Position", liftMotor.getCurrentPosition());
         telemetry.addData("liftMotor Power", liftMotor.getPower());
         telemetry.addData("Lift State", liftState);
+        telemetry.addData("LiftEncoders", liftMotor.getCurrentPosition());
 
     }
 
