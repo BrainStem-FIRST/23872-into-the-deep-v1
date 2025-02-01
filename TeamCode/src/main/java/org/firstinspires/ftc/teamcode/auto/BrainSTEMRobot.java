@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
@@ -25,6 +26,8 @@ public class BrainSTEMRobot {
 
     public PinpointDrive drive;
 
+
+
     public BrainSTEMRobot(Telemetry telemetry, HardwareMap map, Pose2d pose){
         this.telemetry = telemetry;
         this.map = map;
@@ -40,6 +43,7 @@ public class BrainSTEMRobot {
         subsystems.add(depositor);
         subsystems.add(collector);
         subsystems.add(extension);
+
     }
 
     public void update() {

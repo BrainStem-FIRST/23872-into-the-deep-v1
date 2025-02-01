@@ -6,9 +6,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 
 @Config
@@ -23,13 +26,14 @@ public class Collector implements Component {
     public static Params PARAMS = new Params();
 
     public CollectorState collectorState;
-
+    NormalizedColorSensor colorSensor;
     public Collector(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 
         collectorState = CollectorState.LEVEL;
         collectorMotor = new CachingMotor(hardwareMap.get(DcMotorEx.class, "collector"));
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "collectorColor");
     }
 
     public enum CollectorState {
@@ -39,6 +43,9 @@ public class Collector implements Component {
 
     }
 
+    public double getDistance() {
+        return ((DistanceSensor) colorSensor).getDistance(DistanceUnit.CM);
+    }
     @Override
     public void reset() {}
 
@@ -134,5 +141,19 @@ public class Collector implements Component {
 
     public Action collectorOffAction() {
         return new CollectorOff();
+    }
+
+    public Action waitForCollectionAction() {
+        return new WaitForCollectionAction();
+    }
+
+    public class WaitForCollectionAction implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+
+
+            return getDistance() > 3;
+        }
     }
 }

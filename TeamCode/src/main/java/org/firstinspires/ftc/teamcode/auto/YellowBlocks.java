@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 
 
@@ -110,7 +112,7 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.collector.collectorInAction(),
                                 robot.extension.gotoCenterBlock()
                         ),
-                        new SleepAction(1.5),
+                        robot.collector.waitForCollectionAction(),
                         robot.extension.gotoRetract(),
                         robot.collector.collectorOffAction(),
 
@@ -141,7 +143,7 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.collector.collectorInAction(),
                                 robot.extension.gotoLeftBlock()
                         ),
-                        new SleepAction(1.5),
+                        robot.collector.waitForCollectionAction(),
                         robot.extension.gotoRetract(),
                         robot.collector.collectorOffAction(),
 
@@ -175,9 +177,7 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.extension.gotoLeftBlock()
                         ),
                         robot.extension.gotoLeftBlock(),
-                        new SleepAction(1.5),
-                        robot.collector.collectorInAction(),
-                        new SleepAction(1.5),
+                        robot.collector.waitForCollectionAction(),
                         robot.extension.gotoRetract(),
                         robot.collector.collectorOffAction(),
 
