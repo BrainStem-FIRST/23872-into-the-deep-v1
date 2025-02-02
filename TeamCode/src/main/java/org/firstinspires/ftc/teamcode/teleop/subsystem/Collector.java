@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 @Config
 public class Collector implements Component {
-    public static double currentThreshold = 7500, extakeExtraTime = 0.5;
+    public static double currentThreshold = 7500, extakeExtraTime = 0.5, outtakePower = -0.40;
 
     Telemetry telemetry;
     HardwareMap hardwareMap;
@@ -90,7 +90,7 @@ public class Collector implements Component {
             // extaking once current has spike for a validated amount of frames
         }
         if (currentCounter > 10) {
-            collectorMotor.setPower(-0.75);
+            collectorMotor.setPower(outtakePower);
         }
         // collecting if there is no current spike
         else {
