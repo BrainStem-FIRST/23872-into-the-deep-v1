@@ -2,23 +2,25 @@ package org.firstinspires.ftc.teamcode.teleop.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 @Config
 public class Collector implements Component {
-    public static class Params {
-
-    }
+    public static double currentThreshold = 7500, extakeExtraTime = 0.5;
 
     Telemetry telemetry;
     HardwareMap hardwareMap;
     CachingMotor collectorMotor;
-    public static Params PARAMS = new Params();
+    private int currentCounter = 0;
+    private final ElapsedTime extakeExtraTimer = new ElapsedTime();
 
     public CollectorState collectorState;
 
@@ -28,6 +30,7 @@ public class Collector implements Component {
 
         collectorState = CollectorState.LEVEL;
         collectorMotor = new CachingMotor(hardwareMap.get(DcMotorEx.class, "collector"));
+        collectorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public enum CollectorState {
@@ -74,9 +77,25 @@ public class Collector implements Component {
     private void collectorLevel() {
         collectorMotor.setPower(0.0);
     }
-
     private void collectorIn() {
-        collectorMotor.setPower(1.0);
+        // checking for a current spike
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > currentThreshold) {
+            currentCounter += 1;
+            extakeExtraTimer.reset();
+            // resetting current count timer once pass a safety extake threshold
+        } else {
+            if(extakeExtraTimer.seconds() > extakeExtraTime)
+                currentCounter = 0;
+
+            // extaking once current has spike for a validated amount of frames
+        }
+        if (currentCounter > 10) {
+            collectorMotor.setPower(-0.75);
+        }
+        // collecting if there is no current spike
+        else {
+            collectorMotor.setPower(0.99);
+        }
     }
 
     private void collectorOut() {

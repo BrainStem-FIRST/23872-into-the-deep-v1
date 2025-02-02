@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -29,6 +30,7 @@ public class Collector implements Component {
     public CollectorState collectorState;
     NormalizedColorSensor colorSensor;
     private int currentCounter = 0;
+    private final ElapsedTime extakeExtraTimer = new ElapsedTime();
     public Collector(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
@@ -91,15 +93,22 @@ public class Collector implements Component {
     }
 
     private void collectorIn() {
+        // checking for a current spike
         if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > 2516) {
             currentCounter += 1;
+            extakeExtraTimer.reset();
+        // resetting current count timer once pass a safety extake threshold
         } else {
-            currentCounter = 0;
+            if(extakeExtraTimer.seconds() > 2)
+                currentCounter = 0;
 
+        // extaking once current has spike for a validated amount of frames
         }
         if (currentCounter > 10) {
-            collectorMotor.setPower(0.25);
-        } else {
+            collectorMotor.setPower(0.75);
+        }
+        // collecting if there is no current spike
+        else {
             collectorMotor.setPower(-0.99);
         }
     }
