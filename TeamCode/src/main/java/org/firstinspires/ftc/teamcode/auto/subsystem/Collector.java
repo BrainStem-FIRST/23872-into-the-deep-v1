@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 
@@ -27,6 +28,7 @@ public class Collector implements Component {
 
     public CollectorState collectorState;
     NormalizedColorSensor colorSensor;
+    private int currentCounter = 0;
     public Collector(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
@@ -89,7 +91,17 @@ public class Collector implements Component {
     }
 
     private void collectorIn() {
-        collectorMotor.setPower(-0.99);
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > 2516) {
+            currentCounter += 1;
+        } else {
+            currentCounter = 0;
+
+        }
+        if (currentCounter > 10) {
+            collectorMotor.setPower(0.25);
+        } else {
+            collectorMotor.setPower(-0.99);
+        }
     }
 
     public void setIntake() {

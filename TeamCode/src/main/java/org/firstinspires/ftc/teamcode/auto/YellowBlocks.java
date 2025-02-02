@@ -177,7 +177,6 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.extension.gotoLeftBlock()
                         ),
                         robot.extension.gotoLeftBlock(),
-                        robot.collector.waitForCollectionAction(),
                         robot.extension.gotoRetract(),
                         robot.collector.collectorOffAction(),
 
