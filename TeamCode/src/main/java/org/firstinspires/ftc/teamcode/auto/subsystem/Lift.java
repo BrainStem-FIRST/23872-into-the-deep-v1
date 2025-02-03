@@ -22,7 +22,7 @@ public class Lift implements Component {
 
         public int BASE_HEIGHT = 25;
         public int DECONFLICT_HEIGHT = 200;
-        public int GRAB_HEIGHT = 20;
+        public int GRAB_HEIGHT = 15;
         public int LOW_BASKET_HEIGHT = 600;
         public int HIGH_BASKET_HEIGHT = 1000;
         public int SPECIMEN_LEVEL_HEIGHT = 80;

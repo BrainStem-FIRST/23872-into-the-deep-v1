@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -16,9 +17,11 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
+import org.firstinspires.ftc.teamcode.auto.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 
 
+@Config
 @Autonomous(name="Yellow Blocks", group="Hippos")
 public class YellowBlocks extends LinearOpMode {
     @Override
@@ -89,7 +92,7 @@ public class YellowBlocks extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                robot.extension.gotoRetract(),
+                                robot.extension.goToPosition(0, 5),
                                 robot.lift.gotoHighBasket(),
                                 new SleepAction(2.0),
                                 robot.depositor.gotoUp(),
@@ -110,10 +113,11 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction(),
-                                robot.extension.gotoCenterBlock()
+
+                                robot.extension.goToPosition(Extension.PARAMS.EXTENSION_RIGHT_BLOCK, Extension.PARAMS.TOLERANCE)
                         ),
                         robot.collector.waitForCollectionAction(),
-                        robot.extension.gotoRetract(),
+                        //robot.extension.gotoRetract(),
                         robot.collector.collectorOffAction(),
 
                         // DEPOSIT SEQUENCE
@@ -141,10 +145,10 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction(),
-                                robot.extension.gotoLeftBlock()
+                                robot.extension.goToPosition(Extension.PARAMS.EXTENSION_LEFT_BLOCK, Extension.PARAMS.TOLERANCE)
                         ),
                         robot.collector.waitForCollectionAction(),
-                        robot.extension.gotoRetract(),
+                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_MIN, Extension.PARAMS.TOLERANCE),
                         robot.collector.collectorOffAction(),
 
                         // DEPOSIT SEQUENCE
@@ -174,10 +178,13 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction(),
-                                robot.extension.gotoLeftBlock()
-                        ),
-                        robot.extension.gotoLeftBlock(),
-                        robot.extension.gotoRetract(),
+                                robot.extension.goToPosition(Extension.PARAMS.EXTENSION_LEFT_BLOCK, Extension.PARAMS.TOLERANCE)
+
+                                ),
+                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_LEFT_BLOCK, Extension.PARAMS.TOLERANCE),
+
+                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_MIN, Extension.PARAMS.TOLERANCE),
+
                         robot.collector.collectorOffAction(),
 
                         // DEPOSIT SEQUENCE
