@@ -323,6 +323,7 @@ public class Extension implements Component {
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 extension.setTargetPosition(targetPosition);
                 return Math.abs(extension.getCurrentPosition() - target) > tolerance;
             }

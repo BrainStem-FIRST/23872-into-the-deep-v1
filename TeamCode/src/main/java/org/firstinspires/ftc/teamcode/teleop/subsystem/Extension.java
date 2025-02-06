@@ -32,6 +32,8 @@ public class Extension implements Component {
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
 
+        public double FIND_BLOCK_POWER = 0.75;
+
         public int TOLERANCE = 5;
 
         public static final int EXTENSION_MAX = 500;
@@ -47,13 +49,14 @@ public class Extension implements Component {
     private double power = 0;
 
     private int error = 0;
+    public double targetFindBlockPower = 0;
     // instantiating PIDController
     PIDController extensionController;
     DigitalChannel extensionLimitSwitch;
 
     // Constants
 
-    public static Extension.Params PARAMS = new Extension.Params();
+    public static Params PARAMS = new Params();
 
 
     // constructor for Extension class
@@ -161,8 +164,14 @@ public class Extension implements Component {
                 break;
 
             case CUSTOM:
-                setTarget(target);
-                setMotorPower(getControlPower());
+                //setTarget(target);
+                //setMotorPower(getControlPower());
+                extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                if(extension.getCurrentPosition() > Params.EXTENSION_MAX)
+                     setMotorPower(-0.2);
+                else
+                    extension.setPower(targetFindBlockPower);
+                telemetry.addData("extension power", extension.getPower());
                 break;
         }
     }

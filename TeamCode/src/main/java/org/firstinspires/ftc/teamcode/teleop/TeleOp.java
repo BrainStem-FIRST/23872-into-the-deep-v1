@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositGripSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositReleaseSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenBlockCommand;
@@ -57,12 +58,16 @@ public class TeleOp extends LinearOpMode {
 
     private void driver1ExtensionControls(BrainSTEMRobot robot) {
         if (gamepad1.dpad_up) {
-            robot.extension.incrementOut();
+            //robot.extension.incrementOut();
             robot.extension.setCustom();
+            robot.extension.targetFindBlockPower = Extension.PARAMS.FIND_BLOCK_POWER;
         } else if (gamepad1.dpad_down) {
-            robot.extension.incrementIn();
+            robot.extension.targetFindBlockPower = -Extension.PARAMS.FIND_BLOCK_POWER;
+            //robot.extension.incrementIn();
             robot.extension.setCustom();
         }
+        else
+            robot.extension.targetFindBlockPower = 0;
 
         if (gamepad1.x && !extensionResetInProgress) {
             robot.extension.setRetract();

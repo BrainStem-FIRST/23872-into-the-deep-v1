@@ -78,10 +78,6 @@ public class YellowBlocks extends LinearOpMode {
         Action depositLeftBlock = depositLeftBlockTrajectory.build();
         Action park = parkTrajectory.build();
 
-        Actions.runBlocking(
-                robot.depositor.closeClaw()
-        );
-
         telemetry.addLine("Robot Ready");
         telemetry.update();
 
@@ -91,6 +87,7 @@ public class YellowBlocks extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        robot.depositor.closeClaw(),
                         new ParallelAction(
                                 robot.extension.goToPosition(0, 5),
                                 robot.lift.gotoHighBasket(),
@@ -113,7 +110,6 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction(),
-
                                 robot.extension.goToPosition(Extension.PARAMS.EXTENSION_RIGHT_BLOCK, Extension.PARAMS.TOLERANCE)
                         ),
                         robot.collector.waitForCollectionAction(),
