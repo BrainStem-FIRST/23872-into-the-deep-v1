@@ -22,7 +22,7 @@ public class Depositor implements Component {
         public double depositorNeutralPosition = 0.5;
         public double gripperClosedPosition = 0.99;
         public double gripperOpenedPosition = 0.01;
-        public double gripperLowerPWM = 100;
+        public double gripperLowerPWM = 500;
         public double gripperUpperPWM = 2400;
 
         public final static int GRIPPER_OPEN_TIME_MS = 250;
@@ -50,8 +50,8 @@ public class Depositor implements Component {
         rotationServo = new CachingServo(hardwareMap.get(ServoImplEx.class, "depositorRotationServo"));
         gripperServo = new CachingServo(hardwareMap.get(ServoImplEx.class, "gripperServo"));
         gripperServo.setPwmRange(new PwmControl.PwmRange(PARAMS.gripperLowerPWM, PARAMS.gripperUpperPWM));
-        depositorState = DepositorState.DEPOSITOR_DOWN;
-        gripperState = GripperState.GRIPPER_OPEN;
+        depositorState = DepositorState.DEPOSITOR_UP;
+        gripperState = GripperState.GRIPPER_CLOSED;
     }
 
     public enum GripperState {
@@ -177,10 +177,10 @@ public class Depositor implements Component {
         private boolean initialized = false;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                moveDepositorBackward();
-                initialized = true;
-            }
+            setDepositorBackward();
+            telemetry.addData("Depositor State", depositorState);
+            telemetry.update();
+            update();
 
             return false;
         }
@@ -194,11 +194,8 @@ public class Depositor implements Component {
         private boolean initialized = false;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                moveDepositorForward();
-                initialized = true;
-            }
-
+            setDepositorForward();
+            update();
             return false;
         }
     }
@@ -208,14 +205,12 @@ public class Depositor implements Component {
     }
 
     public class GotoUp implements Action {
-        private boolean initialized = false;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                moveDepositorUp();
-                initialized = true;
-            }
-
+            setDepositorUp();
+            telemetry.addData("Depositor State", depositorState);
+            telemetry.update();
+            update();
             return false;
         }
     }
@@ -229,14 +224,10 @@ public class Depositor implements Component {
     }
 
     public class GotoDown implements Action {
-        private boolean initialized = false;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                moveDepositorDown();
-                initialized = true;
-            }
-
+            setDepositorDown();
+            update();
             return false;
         }
     }
@@ -244,7 +235,11 @@ public class Depositor implements Component {
     public class OpenClaw implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            openGripper();
+            setGripperOpen();
+            update();
+            telemetry.addData("Gripper State", gripperState);
+            telemetry.update();
+
             return false;
         }
     }
@@ -256,7 +251,8 @@ public class Depositor implements Component {
     public class CloseClaw implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            closeGripper();
+            setGripperClosed();
+            update();
             return false;
         }
     }

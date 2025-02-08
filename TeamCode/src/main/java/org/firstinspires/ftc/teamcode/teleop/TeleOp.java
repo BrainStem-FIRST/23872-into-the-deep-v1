@@ -43,16 +43,19 @@ public class TeleOp extends LinearOpMode {
             robot.update();
             updateDrive(robot);
             updateDriver1(robot);
+            updateDriver2(robot);
             telemetry.update();
         }
     }
 
 
     private void updateDriver1(BrainSTEMRobot robot) {
-        driver2LiftControls(robot);
-        driver2DepositorControls(robot);
         driver1CollectorControls(robot);
         driver1ExtensionControls(robot);
+    }
+
+    private void updateDriver2(BrainSTEMRobot robot) {
+        driver2LiftControls(robot);
         driver2DepositorControls(robot);
     }
 
@@ -129,9 +132,6 @@ public class TeleOp extends LinearOpMode {
         if (gamepad2.a) {
             new DepositSpecimenBlockCommand(robot,telemetry).schedule();
         }
-    }
-
-    private void updateDriver2(BrainSTEMRobot robot) {
     }
 
     private void drawRobot(BrainSTEMRobot robot) {

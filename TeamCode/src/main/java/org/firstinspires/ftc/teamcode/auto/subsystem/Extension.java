@@ -19,11 +19,10 @@ public class Extension implements Component {
 
     // initialization
     private Telemetry telemetry;
-    public static DcMotorEx extension;
+    public static DcMotorEx extensionMotor;
     private HardwareMap map;
 
     private AnalogInput eTrackerEncoder;
-
 
     public static class Params {
         // PIDS Values
@@ -67,10 +66,10 @@ public class Extension implements Component {
 
         extensionController.setInputBounds(PARAMS.EXTENSION_MIN, PARAMS.EXTENSION_MAX);
         extensionController.setOutputBounds(-1.0, 1.0);
-        extension = new CachingMotor(map.get(DcMotorEx.class, "extension"));
-        extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionMotor = new CachingMotor(map.get(DcMotorEx.class, "extension"));
+        extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extensionLimitSwitch = hwMap.get(DigitalChannel.class, "eLimitSwitch");
     }
 
@@ -88,19 +87,19 @@ public class Extension implements Component {
 
     // setting the extension power off
     public void extensionOff() {
-        extension.setPower(0);
+        extensionMotor.setPower(0);
     }
 
     // setting the pid extension power customizable
     private void setExtensionPower(int ticks) {
         target = ticks;
-        error = extension.getCurrentPosition() - ticks;
+        error = extensionMotor.getCurrentPosition() - ticks;
         if (!(Math.abs(error) <= PARAMS.TOLERANCE)) {
             power = extensionController.updateWithError(error) + PARAMS.kS;
         } else {
             power = 0;
         }
-        extension.setPower(-power);
+        extensionMotor.setPower(-power);
     }
 
     public void setRetract() {
@@ -124,7 +123,7 @@ public class Extension implements Component {
 
 
     public boolean inTolerance() {
-        return Math.abs(extension.getCurrentPosition() - extensionController.getTarget()) < PARAMS.TOLERANCE;
+        return Math.abs(extensionMotor.getCurrentPosition() - extensionController.getTarget()) < PARAMS.TOLERANCE;
     }
 
     // placeholder function
@@ -138,19 +137,19 @@ public class Extension implements Component {
     }
 
     private void setTarget(int target) {
-        extension.setTargetPosition(target);
+        extensionMotor.setTargetPosition(target);
     }
 
     private void selectState() {
         switch (extensionState) {
             case RETRACT:
                 if (isExtensionLimit()) {
-                    extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     target = 0;
                     setCustom();
                 } else {
-                    extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     setMotorPower(-1.0);
                 }
                 break;
@@ -161,7 +160,7 @@ public class Extension implements Component {
 
             case CUSTOM:
                 setTarget(target);
-                extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 setMotorPower(1.0);
                 ;
                 break;
@@ -170,13 +169,13 @@ public class Extension implements Component {
 
 
     private double getControlPower() {
-        double pidPower = -extensionController.update(extension.getCurrentPosition());
+        double pidPower = -extensionController.update(extensionMotor.getCurrentPosition());
 
         return pidPower;
     }
 
     public static void setMotorPower(double power) {
-        extension.setPower(power);
+        extensionMotor.setPower(power);
     }
 
     // update function for setting the state to extension
@@ -200,8 +199,8 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < target - 50) {
-                extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (extensionMotor.getCurrentPosition() < target - 50) {
+                extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
             }
 
@@ -230,8 +229,8 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < target - 50) {
-                extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (extensionMotor.getCurrentPosition() < target - 50) {
+                extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
             }
             update();
@@ -255,8 +254,8 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extension.getCurrentPosition() < target - 50) {
-                extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (extensionMotor.getCurrentPosition() < target - 50) {
+                extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 setMotorPower(1.0);
             }
             return false;
@@ -274,16 +273,16 @@ public class Extension implements Component {
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
                     initialized = true;
-                    extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     setMotorPower(-1.0);
                 }
 
-                if (extension.getCurrentPosition() < 45) {
+                if (extensionMotor.getCurrentPosition() < 45) {
                     setMotorPower(-0.2);
                     continueRunning = false;
                 }
 
-                packet.put("Ext Pos", extension.getCurrentPosition());
+                packet.put("Ext Pos", extensionMotor.getCurrentPosition());
 
                 return continueRunning;
             }
@@ -302,16 +301,16 @@ public class Extension implements Component {
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
                     initialized = true;
-                    extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     setMotorPower(-1.0);
                 }
 
-                if (extension.getCurrentPosition() < 45) {
+                if (extensionMotor.getCurrentPosition() < 45) {
                     setMotorPower(-0.2);
                     continueRunning = false;
                 }
 
-                packet.put("Ext Pos", extension.getCurrentPosition());
+                packet.put("Ext Pos", extensionMotor.getCurrentPosition());
 
                 return continueRunning;
             }
@@ -319,13 +318,14 @@ public class Extension implements Component {
 
 
     }
+
     public Action goToPosition(int targetPosition, int tolerance) {
+
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                extension.setTargetPosition(targetPosition);
-                return Math.abs(extension.getCurrentPosition() - target) > tolerance;
+                setExtensionPower(targetPosition);
+                return Math.abs(extensionMotor.getCurrentPosition() - target) > tolerance;
             }
         };
     }

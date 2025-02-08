@@ -36,6 +36,7 @@ public class YellowBlocks extends LinearOpMode {
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, beginPose);
         PinpointDrive drive = robot.drive;
+        AutoCommands autoCommands = new AutoCommands(robot, telemetry);
 
         TrajectoryActionBuilder depositPreloadTrajectory = drive.actionBuilder(beginPose)
                 .setReversed(true)

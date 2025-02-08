@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 public class Lift implements Component {
     public static class Params {
         ;
-        public double liftKp = 0.02;
+        public double liftKp = 0.08;
         public double liftKi = 0.01;
         public double liftKd = 0.0001;
 
@@ -30,6 +30,7 @@ public class Lift implements Component {
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 500;
         public int HIGH_BAR_HEIGHT = 800;
         public int TOLERANCE = 30;
+        public double kS = 0.0;
     }
 
     PIDController liftController;
@@ -38,11 +39,14 @@ public class Lift implements Component {
     public static Params PARAMS = new Params();
     public DcMotorEx liftMotor;
     public LiftState liftState;
+    public int targetHeight;
+    public double power = 0.0;
+    public double error = 0.0;
 
     public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
         liftController = new PIDController(PARAMS.liftKp, PARAMS.liftKi, PARAMS.liftKd);
         liftController.setInputBounds(0, 4000);
-        liftController.setOutputBounds(-0.1, 0.99);
+        liftController.setOutputBounds(-0.2, 1.0);
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         liftState = LiftState.DECONFLICT;
@@ -66,10 +70,10 @@ public class Lift implements Component {
         SPECIMEN_LEVEL
     }
 
-    public void setMotorPower(double power) {
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(power);
-    }
+//    public void setMotorPower(double power) {
+//        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        liftMotor.setPower(power);
+//    }
 
     @Override
     public void reset() {
@@ -87,62 +91,56 @@ public class Lift implements Component {
                 break;
 
             case GRAB:
-                setTarget(PARAMS.GRAB_HEIGHT);
+                setMotorPIDPower(PARAMS.GRAB_HEIGHT);
                 break;
 
             case BASE:
-                setTarget(PARAMS.BASE_HEIGHT);
+                setMotorPIDPower(PARAMS.BASE_HEIGHT);
                 break;
 
             case DECONFLICT:
-                setTarget(PARAMS.DECONFLICT_HEIGHT);
+                setMotorPIDPower(PARAMS.DECONFLICT_HEIGHT);
                 break;
 
             case LOW_BASKET:
-                setTarget(PARAMS.LOW_BASKET_HEIGHT);
+                setMotorPIDPower(PARAMS.LOW_BASKET_HEIGHT);
                 break;
 
             case HIGH_BASKET:
-                setTarget(PARAMS.HIGH_BASKET_HEIGHT);
+                setMotorPIDPower(PARAMS.HIGH_BASKET_HEIGHT);
                 break;
 
             case SPECIMEN_LEVEL:
-                setTarget(PARAMS.SPECIMEN_LEVEL_HEIGHT);
+                setMotorPIDPower(PARAMS.SPECIMEN_LEVEL_HEIGHT);
                 break;
 
             case LIFT_SPECIMEN_PRE_DEPOSIT:
-                setTarget(PARAMS.LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT);
+                setMotorPIDPower(PARAMS.LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT);
                 break;
 
 
             case LIFT_SPECIMEN_HIGH_BAR:
-                setTarget(PARAMS.LIFT_SPECIMEN_HIGH_BAR_HEIGHT);
+                setMotorPIDPower(PARAMS.LIFT_SPECIMEN_HIGH_BAR_HEIGHT);
                 break;
 
             case HIGH_BAR:
-                setTarget(PARAMS.HIGH_BAR_HEIGHT);
+                setMotorPIDPower(PARAMS.HIGH_BAR_HEIGHT);
                 break;
         }
     }
 
-    private double getControlPower() {
-        double pidPower = -liftController.update(liftMotor.getCurrentPosition());
-
-        return pidPower + feedForwardPower();
-    }
-
-    private double feedForwardPower() {
-        double x = liftMotor.getCurrentPosition();
-        double m = -0.0;
-        double b = -0.0;
-
-        return m * x + b;
+    public void setMotorPIDPower(int liftTicks) {
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        targetHeight = liftTicks;
+        liftController.setTarget(liftTicks);
+        error = liftTicks - liftMotor.getCurrentPosition();
+        power = liftController.updateWithError(error) + PARAMS.kS;
+        liftMotor.setPower(power);;
     }
 
     @Override
     public void update() {
         selectState();
-        setMotorPower(1.0);
     }
 
     public void setBase() {
@@ -178,22 +176,6 @@ public class Lift implements Component {
         return "Complete";
     }
 
-    public void setSpecimenLevel() {
-        liftState = LiftState.SPECIMEN_LEVEL;
-    }
-
-    public void setSpecimenPreDeposit() {
-        liftState = liftState.LIFT_SPECIMEN_PRE_DEPOSIT;
-    }
-
-    public void setLiftSpecimenHighBar() {
-        liftState = liftState.LIFT_SPECIMEN_HIGH_BAR;
-    }
-
-    public void setHighBar() {
-        liftState = liftState.HIGH_BAR;
-    }
-
     public class GotoHighBasket implements Action {
         private boolean initialized = false;
 
@@ -202,17 +184,13 @@ public class Lift implements Component {
             if (!initialized) {
                 liftState = LiftState.HIGH_BASKET;
                 initialized = true;
-                liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                liftMotor.setPower(1.0);
             }
 
-//            if (liftMotor.getCurrentPosition() > 1000) {
-//                update();
-//            }
+            update();
 
             packet.put("Lift Pos", liftMotor.getCurrentPosition());
 
-            return liftMotor.getCurrentPosition() < 500;
+            return liftMotor.getCurrentPosition() < 900;
         }
     }
 
