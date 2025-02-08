@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 public class Lift implements Component {
     public static class Params {
         ;
-        public double liftKp = 0.08;
+        public double liftKp = 0.09;
         public double liftKi = 0.01;
         public double liftKd = 0.0001;
 
@@ -77,7 +77,7 @@ public class Lift implements Component {
 
     @Override
     public void reset() {
-//        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     private void setTarget(int target) {
@@ -135,12 +135,14 @@ public class Lift implements Component {
         liftController.setTarget(liftTicks);
         error = liftTicks - liftMotor.getCurrentPosition();
         power = liftController.updateWithError(error) + PARAMS.kS;
-        liftMotor.setPower(power);;
+        liftMotor.setPower(power);
     }
 
     @Override
     public void update() {
         selectState();
+//        telemetry.addData("Lift Power", liftMotor.getPower());
+//        telemetry.addData("Lift Pos", liftMotor.getCurrentPosition());
     }
 
     public void setBase() {
@@ -188,8 +190,6 @@ public class Lift implements Component {
 
             update();
 
-            packet.put("Lift Pos", liftMotor.getCurrentPosition());
-
             return liftMotor.getCurrentPosition() < 900;
         }
     }
@@ -226,6 +226,10 @@ public class Lift implements Component {
                 liftState = LiftState.DECONFLICT;
                 initialized = true;
             }
+
+            telemetry.addData("Lift Target", targetHeight);
+            telemetry.addData("Lift Pos", liftMotor.getCurrentPosition());
+            telemetry.update();
 
             update();
             return !inTightTolerance();

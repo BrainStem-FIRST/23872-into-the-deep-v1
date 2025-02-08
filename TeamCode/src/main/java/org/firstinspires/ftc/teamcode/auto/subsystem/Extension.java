@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 @Config
@@ -26,7 +27,7 @@ public class Extension implements Component {
 
     public static class Params {
         // PIDS Values
-        public double kP_Up = 0.05;//FIXME
+        public double kP_Up = 0.02;//FIXME
         public double kI_Up = 0.00; //FIXME
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
@@ -140,7 +141,21 @@ public class Extension implements Component {
         extensionMotor.setTargetPosition(target);
     }
 
+    public void setMotorPIDPower(int extTicks) {
+        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        target = extTicks;
+        extensionController.setTarget(extTicks);
+        error = extTicks - extensionMotor.getCurrentPosition();
+        power = extensionController.updateWithError(error) + PARAMS.kS;
+        extensionMotor.setPower(power);;
+    }
+
     private void selectState() {
+//        telemetry.addData("Ext State", extensionState);
+//        telemetry.addData("Ext Target", target);
+//        telemetry.addData("Ext Pos", extensionMotor.getCurrentPosition());
+//        telemetry.update();
+
         switch (extensionState) {
             case RETRACT:
                 if (isExtensionLimit()) {
@@ -159,10 +174,17 @@ public class Extension implements Component {
                 break;
 
             case CUSTOM:
-                setTarget(target);
-                extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                setMotorPower(1.0);
-                ;
+                setMotorPIDPower(target);
+                break;
+
+            case OUT:
+                target = PARAMS.EXTENSION_MAX;
+                if (extensionMotor.getCurrentPosition() < target - 50) {
+                    extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    setMotorPower(1.0);
+                } else {
+                    setCustom();
+                }
                 break;
         }
     }
@@ -194,24 +216,36 @@ public class Extension implements Component {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
-                target = PARAMS.EXTENSION_MAX;
-                extensionState = ExtensionState.CUSTOM;
+                extensionState = ExtensionState.OUT;
                 initialized = true;
             }
 
-            if (extensionMotor.getCurrentPosition() < target - 50) {
-                extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                setMotorPower(1.0);
-            }
+            update();
+            return extensionMotor.getCurrentPosition() < PARAMS.EXTENSION_MAX - 25;
+        }
+    }
 
+    public Action gotoMax() {
+        return new GotoMax();
+    }
+
+    public class GotoRetract implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                extensionState = ExtensionState.RETRACT;
+                initialized = true;
+            }
             update();
 
             return !inTolerance();
         }
     }
 
-    public Action gotoMax() {
-        return new GotoMax();
+    public Action gotoRetract() {
+        return new GotoRetract();
     }
 
     public Action gotoCenterBlock() {
@@ -229,10 +263,10 @@ public class Extension implements Component {
                 initialized = true;
             }
 
-            if (extensionMotor.getCurrentPosition() < target - 50) {
-                extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                setMotorPower(1.0);
-            }
+            telemetry.addData("Ext Target", target);
+            telemetry.addData("Ext Pos", extensionMotor.getCurrentPosition());
+            telemetry.update();
+
             update();
 
             return !inTolerance();
@@ -241,82 +275,6 @@ public class Extension implements Component {
 
     public Action gotCenterBlock() {
         return new GotoCenterBlock();
-    }
-
-    public static class GotoRightBlock implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                target = PARAMS.EXTENSION_RIGHT_BLOCK;
-                extensionState = ExtensionState.CUSTOM;
-                initialized = true;
-            }
-
-            if (extensionMotor.getCurrentPosition() < target - 50) {
-                extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                setMotorPower(1.0);
-            }
-            return false;
-        }
-
-        public Action gotoLeftBlock() {
-            return new GotoLeftBlock();
-        }
-
-        public class GotoLeftBlock implements Action {
-            private boolean initialized = false;
-            private boolean continueRunning = true;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-                    initialized = true;
-                    extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    setMotorPower(-1.0);
-                }
-
-                if (extensionMotor.getCurrentPosition() < 45) {
-                    setMotorPower(-0.2);
-                    continueRunning = false;
-                }
-
-                packet.put("Ext Pos", extensionMotor.getCurrentPosition());
-
-                return continueRunning;
-            }
-        }
-
-
-        public Action goToRetract() {
-            return new GotoRetract();
-        }
-
-        public class GotoRetract implements Action {
-            private boolean initialized = false;
-            private boolean continueRunning = true;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-                    initialized = true;
-                    extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    setMotorPower(-1.0);
-                }
-
-                if (extensionMotor.getCurrentPosition() < 45) {
-                    setMotorPower(-0.2);
-                    continueRunning = false;
-                }
-
-                packet.put("Ext Pos", extensionMotor.getCurrentPosition());
-
-                return continueRunning;
-            }
-        }
-
-
     }
 
     public Action goToPosition(int targetPosition, int tolerance) {

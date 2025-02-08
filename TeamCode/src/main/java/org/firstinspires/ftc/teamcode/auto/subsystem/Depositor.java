@@ -178,8 +178,6 @@ public class Depositor implements Component {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             setDepositorBackward();
-            telemetry.addData("Depositor State", depositorState);
-            telemetry.update();
             update();
 
             return false;
@@ -208,8 +206,6 @@ public class Depositor implements Component {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             setDepositorUp();
-            telemetry.addData("Depositor State", depositorState);
-            telemetry.update();
             update();
             return false;
         }

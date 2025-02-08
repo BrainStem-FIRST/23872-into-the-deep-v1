@@ -94,18 +94,18 @@ public class Collector implements Component {
 
     private void collectorIn() {
         // checking for a current spike
-        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > 2516) {
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000) {
             currentCounter += 1;
-            extakeExtraTimer.reset();
         // resetting current count timer once pass a safety extake threshold
         } else {
-            if(extakeExtraTimer.seconds() > 2)
+            if(extakeExtraTimer.seconds() > 0.5) {
                 currentCounter = 0;
-
+            }
         // extaking once current has spike for a validated amount of frames
         }
         if (currentCounter > 10) {
             collectorMotor.setPower(0.75);
+            extakeExtraTimer.reset();
         }
         // collecting if there is no current spike
         else {
@@ -134,7 +134,6 @@ public class Collector implements Component {
                 collectorState = CollectorState.INTAKE;
                 initialized = true;
             }
-
             update();
 
             return false;
@@ -172,7 +171,8 @@ public class Collector implements Component {
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-
+            telemetry.addData("Color Distance", getDistance());
+            telemetry.update();
 
             return getDistance() > 3;
         }

@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 
 
 @Config
+@Disabled
 @Autonomous(name="Yellow Blocks", group="Hippos")
 public class YellowBlocks extends LinearOpMode {
     @Override

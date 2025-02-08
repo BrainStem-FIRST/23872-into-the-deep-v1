@@ -41,6 +41,28 @@ public class AutoCommands {
         ));
     }
 
+    public Action addTelemetry(String key, Object data) {
+        return new AddTelemetry(key, data);
+    }
+
+    public class AddTelemetry implements Action {
+        String key;
+        Object data;
+
+        public AddTelemetry(String key, Object data) {
+            this.key = key;
+            this.data = data;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            telemetry.addData(key, data);
+            telemetry.update();
+
+            return false;
+        }
+    }
+
     /** STEMPilot **/
 
     public Action driveToPoint(double targetX, double targetY, double targetHeading, double toleranceAxial, double toleranceLateral, double toleranceHeading, boolean stopAtEnd, double timeout) {
@@ -52,9 +74,9 @@ public class AutoCommands {
         double targetX, targetY, targetHeading, timeout;
         boolean stopAtEnd;
 
-        PIDController axialController = new PIDController(0.3, 0.07, 0.09);
-        PIDController lateralController = new PIDController(0.3, 0.07, 0.09);
-        PIDController headingController = new PIDController(0.75, 0.2, 0.1);
+        PIDController axialController = new PIDController(0.35, 0.0, 0.0);
+        PIDController lateralController = new PIDController(0.35, 0.0, 0.0);
+        PIDController headingController = new PIDController(0.65, 0.0, 0.0);
 
         ElapsedTime timer = new ElapsedTime();  // Persistent timer
 
@@ -90,6 +112,12 @@ public class AutoCommands {
             double worldYPosition = robot.drive.pinpoint.getPositionRR().position.y; // lateral position
             double worldAngle_rad = robot.drive.pinpoint.getHeading();
 
+            double forwardError = targetX - worldXPosition;   // x error (forward)
+            double lateralError = targetY - worldYPosition;     // y error (lateral)
+            double distanceError = Math.hypot(forwardError, lateralError);
+            double distanceTolerance = Math.hypot(toleranceAxial, toleranceLateral);
+            double robotVelocity = Math.hypot(robot.drive.pinpoint.getVelocityRR().linearVel.x, robot.drive.pinpoint.getVelocityRR().linearVel.y);
+
             // --- Correct PID Setup for Field Errors ---
             // In our Road Runner coordinate system, x is forward and y is lateral.
             // So the "forward" (axial) PID should work on x and the "lateral" PID on y.
@@ -116,13 +144,29 @@ public class AutoCommands {
             double sin = Math.sin(worldAngle_rad);
             double cos = Math.cos(worldAngle_rad);
             double robotForward = forwardOutput * cos + lateralOutput * sin;
-            double robotStrafe  = -forwardOutput * sin + lateralOutput * cos;
+            double robotStrafe = -forwardOutput * sin + lateralOutput * cos;
 
             // Now send these commands to the drivetrain.
             // Note: updateDrivetrain expects (forward, strafe, turn)
+            double brakingScale = 0.1;
+
+            if (stopAtEnd && robotVelocity > 35 && distanceError < 24) {
+                robotForward *= brakingScale;
+                telemetry.addData("Braking Factor", true);
+            } else {
+                telemetry.addData("Braking Factor", false);
+            }
+
             updateDrivetrain(robotForward, robotStrafe, turnPower);
 
+            // --- Determine if we are still running ---
+            boolean isRunning = distanceError > distanceTolerance ||
+                    (Math.abs(normalizeAngle(targetHeading - worldAngle_rad)) > toleranceHeading);
+
             // --- Telemetry (for debugging) ---
+            telemetry.addData("isRunning", isRunning);
+            telemetry.addData("robotVelocity", robotVelocity);
+            telemetry.addData("distanceError", distanceError);
             telemetry.addData("Target X (forward)", targetX);
             telemetry.addData("Target Y (lateral)", targetY);
             telemetry.addData("Pos X (forward)", worldXPosition);
@@ -133,16 +177,8 @@ public class AutoCommands {
             telemetry.addData("turnPower", turnPower);
             telemetry.update();
 
-            // --- Determine if we are still running ---
-            double forwardError = targetX - worldXPosition;
-            double lateralError = targetY - worldYPosition;
-            boolean isRunning = (Math.abs(forwardError) > toleranceAxial) ||
-                    (Math.abs(lateralError) > toleranceLateral) ||
-                    (Math.abs(normalizeAngle(targetHeading - worldAngle_rad)) > toleranceHeading);
-
             if (timeout > 0 && timer.seconds() > timeout) {
-                updateDrivetrain(0, 0, 0);
-                return false;
+                isRunning = false;
             }
 
             if (!isRunning && stopAtEnd) {
