@@ -25,7 +25,9 @@ public class YellowBlocksDrivePoint extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
         Pose2d offWall = new Pose2d(-39, -62, Math.toRadians(0));
+        Pose2d offWall2 = new Pose2d(-39, -60, Math.toRadians(0));
         Pose2d depositPose = new Pose2d(-54.5, -61, Math.toRadians(45));
+        Pose2d depositPose2 = new Pose2d(-57, -60, Math.toRadians(45));
         Pose2d humanPose = new Pose2d(22, -63, Math.toRadians(0));
         Pose2d rightBlockPose = new Pose2d(-47, -44, Math.toRadians(90));
         Pose2d centerBlockPose = new Pose2d(-57, -43.5, Math.toRadians(89));
@@ -75,7 +77,7 @@ public class YellowBlocksDrivePoint extends LinearOpMode {
                                 ),
                                 new SequentialAction(
                                         new SleepAction(1.5),
-                                        robot.extension.gotoCenterBlock(),
+                                        robot.extension.gotoHumanBlock(),
                                         robot.collector.collectorInAction(),
                                         autoCommands.addTelemetry("Collector on Complete", true)
                                 )
@@ -87,9 +89,25 @@ public class YellowBlocksDrivePoint extends LinearOpMode {
                         new ParallelAction(
                                 robot.extension.gotoRetract(),
                                 robot.collector.collectorOffAction(),
-                                autoCommands.driveToPoint(depositPose.position.x, depositPose.position.y, depositPose.heading.toDouble(), 1.5, 1.5, Math.toRadians(2),true,0.0)
+                                new SequentialAction(
+                                        autoCommands.addTelemetry("beforeOffWall2",true),
+                                        autoCommands.driveToPoint(offWall2.position.x, offWall2.position.y, offWall2.heading.toDouble(), 2.0, 2.0, Math.toRadians(10), true, 0.0),
+                                        autoCommands.addTelemetry("offWall2", true),
+                                        autoCommands.driveToPoint(depositPose2.position.x, depositPose2.position.y, depositPose2.heading.toDouble(), 1.5, 1.5, Math.toRadians(5), true, 0.0),
+                                        autoCommands.addTelemetry("depositPose2", true)
+                                )
                         ),
-                        new SleepAction(5.0)
+                        // DEPOSIT SEQUENCE
+                        robot.lift.gotoGrab(),
+                        robot.depositor.closeClaw(),
+                        new SleepAction(0.25),
+                        robot.lift.gotoDeconflict(),
+                        robot.depositor.gotoUp(),
+                        new SleepAction(0.1),
+                        robot.lift.gotoHighBasket()
+
+
+
                 )
         );
 

@@ -152,9 +152,9 @@ public class AutoCommands {
 
             if (stopAtEnd && robotVelocity > 35 && distanceError < 24) {
                 robotForward *= brakingScale;
-                telemetry.addData("Braking Factor", true);
+                //telemetry.addData("Braking Factor", true);
             } else {
-                telemetry.addData("Braking Factor", false);
+               // telemetry.addData("Braking Factor", false);
             }
 
             updateDrivetrain(robotForward, robotStrafe, turnPower);
@@ -163,18 +163,18 @@ public class AutoCommands {
             boolean isRunning = distanceError > distanceTolerance ||
                     (Math.abs(normalizeAngle(targetHeading - worldAngle_rad)) > toleranceHeading);
 
-            // --- Telemetry (for debugging) ---
-            telemetry.addData("isRunning", isRunning);
-            telemetry.addData("robotVelocity", robotVelocity);
-            telemetry.addData("distanceError", distanceError);
+//            // --- Telemetry (for debugging) ---
+//            telemetry.addData("isRunning", isRunning);
+//            telemetry.addData("robotVelocity", robotVelocity);
+//            telemetry.addData("distanceError", distanceError);
             telemetry.addData("Target X (forward)", targetX);
             telemetry.addData("Target Y (lateral)", targetY);
-            telemetry.addData("Pos X (forward)", worldXPosition);
-            telemetry.addData("Pos Y (lateral)", worldYPosition);
-            telemetry.addData("Heading", worldAngle_rad);
-            telemetry.addData("robotForward", robotForward);
-            telemetry.addData("robotStrafe", robotStrafe);
-            telemetry.addData("turnPower", turnPower);
+//            telemetry.addData("Pos X (forward)", worldXPosition);
+//            telemetry.addData("Pos Y (lateral)", worldYPosition);
+//            telemetry.addData("Heading", worldAngle_rad);
+//            telemetry.addData("robotForward", robotForward);
+//            telemetry.addData("robotStrafe", robotStrafe);
+//            telemetry.addData("turnPower", turnPower);
             telemetry.update();
 
             if (timeout > 0 && timer.seconds() > timeout) {

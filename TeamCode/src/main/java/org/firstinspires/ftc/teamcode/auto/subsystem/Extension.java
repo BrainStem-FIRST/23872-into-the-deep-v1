@@ -37,6 +37,7 @@ public class Extension implements Component {
         public int EXTENSION_MAX = 600;
         public int EXTENSION_LEFT_BLOCK = 415;
         public int EXTENSION_CENTER_BLOCK = 365;
+        public int EXTENSION_HUMAN_BLOCK = 600;
         public int EXTENSION_RIGHT_BLOCK = 375;
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
@@ -124,7 +125,10 @@ public class Extension implements Component {
 
 
     public boolean inTolerance() {
-        return Math.abs(extensionMotor.getCurrentPosition() - extensionController.getTarget()) < PARAMS.TOLERANCE;
+        telemetry.addData("extVel", extensionMotor.getVelocity());
+        telemetry.update();
+        return Math.abs(extensionMotor.getCurrentPosition() - extensionController.getTarget()) < PARAMS.TOLERANCE &&
+                Math.abs(extensionMotor.getVelocity()) < 10;
     }
 
     // placeholder function
@@ -273,8 +277,29 @@ public class Extension implements Component {
         }
     }
 
-    public Action gotCenterBlock() {
-        return new GotoCenterBlock();
+    public Action gotoHumanBlock() {
+        return new GotoHumanBlock();
+    }
+
+    public class GotoHumanBlock implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                target = PARAMS.EXTENSION_HUMAN_BLOCK;
+                extensionState = ExtensionState.CUSTOM;
+                initialized = true;
+            }
+
+            telemetry.addData("Ext Target", target);
+            telemetry.addData("Ext Pos", extensionMotor.getCurrentPosition());
+            telemetry.update();
+
+            update();
+
+            return !inTolerance();
+        }
     }
 
     public Action goToPosition(int targetPosition, int tolerance) {

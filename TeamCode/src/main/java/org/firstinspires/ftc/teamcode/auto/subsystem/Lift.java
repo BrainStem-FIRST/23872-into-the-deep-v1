@@ -162,6 +162,7 @@ public class Lift implements Component {
     }
 
     public boolean inTightTolerance() {
+        telemetry.addData("TightTolerance", Math.abs(liftMotor.getCurrentPosition() - liftMotor.getTargetPosition()) < (PARAMS.TOLERANCE - 10));
         return Math.abs(liftMotor.getCurrentPosition() - liftMotor.getTargetPosition()) < (PARAMS.TOLERANCE - 10);
     }
 
@@ -232,7 +233,7 @@ public class Lift implements Component {
             telemetry.update();
 
             update();
-            return !inTightTolerance();
+            return false;
         }
     }
 
