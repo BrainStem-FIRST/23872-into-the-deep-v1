@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 
 @Config
-public class Collector implements Component {
+public class CollectorAuto implements ComponentAuto {
     public static class Params {
 
     }
@@ -31,7 +31,7 @@ public class Collector implements Component {
     NormalizedColorSensor colorSensor;
     private int currentCounter = 0;
     private final ElapsedTime extakeExtraTimer = new ElapsedTime();
-    public Collector(HardwareMap hardwareMap, Telemetry telemetry) {
+    public CollectorAuto(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 

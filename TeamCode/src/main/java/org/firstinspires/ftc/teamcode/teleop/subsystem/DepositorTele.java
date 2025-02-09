@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 @Config
-public class Depositor implements Component {
+public class DepositorTele implements ComponentTele {
     public static class Params {
         public double depositorForwardPosition = 0.85;
         public double depositorBackwardPosition = 0.275;
@@ -42,7 +42,7 @@ public class Depositor implements Component {
     public DepositorState depositorState;
     public GripperState gripperState;
 
-    public Depositor(HardwareMap hardwareMap, Telemetry telemetry) {
+    public DepositorTele(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         rotationServo = new CachingServo(hardwareMap.get(ServoImplEx.class, "depositorRotationServo"));

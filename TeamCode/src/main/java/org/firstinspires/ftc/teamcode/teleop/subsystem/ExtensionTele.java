@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop.subsystem;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,11 +8,10 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.subsystem.Lift;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 @Config
-public class Extension implements Component {
+public class ExtensionTele implements ComponentTele {
 
     // initialization
     private Telemetry telemetry;
@@ -53,11 +48,11 @@ public class Extension implements Component {
 
     // Constants
 
-    public static Extension.Params PARAMS = new Extension.Params();
+    public static ExtensionTele.Params PARAMS = new ExtensionTele.Params();
 
 
     // constructor for Extension class
-    public Extension(HardwareMap hwMap, Telemetry telemetry) {
+    public ExtensionTele(HardwareMap hwMap, Telemetry telemetry) {
         extensionController = new PIDController(PARAMS.kP_Up, PARAMS.kI_Up, PARAMS.kD_Up);
         this.telemetry = telemetry;
         this.map = hwMap;

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @Config
-public class Lift implements Component {
+public class LiftAuto implements ComponentAuto {
     public static class Params {
         ;
         public double liftKp = 0.02;
@@ -39,7 +39,7 @@ public class Lift implements Component {
     public DcMotorEx liftMotor;
     public LiftState liftState;
 
-    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
+    public LiftAuto(HardwareMap hardwareMap, Telemetry telemetry) {
         liftController = new PIDController(PARAMS.liftKp, PARAMS.liftKi, PARAMS.liftKd);
         liftController.setInputBounds(0, 4000);
         liftController.setOutputBounds(-0.1, 0.99);

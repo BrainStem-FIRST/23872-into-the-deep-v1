@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto.subsystem;
 
-public interface Component {
+public interface ComponentAuto {
     void reset();
 
     void update();

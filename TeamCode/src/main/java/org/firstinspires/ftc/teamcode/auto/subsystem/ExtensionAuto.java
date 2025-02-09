@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 @Config
-public class Extension implements Component {
+public class ExtensionAuto implements ComponentAuto {
 
     // initialization
     private Telemetry telemetry;
@@ -60,7 +60,7 @@ public class Extension implements Component {
 
 
     // constructor for Extension class
-    public Extension(HardwareMap hwMap, Telemetry telemetry) {
+    public ExtensionAuto(HardwareMap hwMap, Telemetry telemetry) {
         extensionController = new PIDController(PARAMS.kP_Up, PARAMS.kI_Up, PARAMS.kD_Up);
         this.telemetry = telemetry;
         this.map = hwMap;

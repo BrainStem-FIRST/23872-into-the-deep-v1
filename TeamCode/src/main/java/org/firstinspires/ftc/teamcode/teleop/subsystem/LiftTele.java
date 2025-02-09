@@ -3,15 +3,13 @@ package org.firstinspires.ftc.teamcode.teleop.subsystem;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @Config
-public class Lift implements Component {
+public class LiftTele implements ComponentTele {
     public static class Params {
         ;
         public double liftKp = 0.01;
@@ -42,7 +40,7 @@ public class Lift implements Component {
     public DcMotorEx liftMotor;
     public LiftState liftState;
 
-    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
+    public LiftTele(HardwareMap hardwareMap, Telemetry telemetry) {
         liftController = new PIDController(PARAMS.liftKp, PARAMS.liftKi, PARAMS.liftKd, telemetry);
         liftController.setInputBounds(0, 1500);
         liftController.setOutputBounds(-0.1, 0.99);
@@ -178,7 +176,7 @@ public class Lift implements Component {
 
     public void setReset() {
         liftState = LiftState.RESET;
-        liftMotor.setPower(-1.0); 
+        liftMotor.setPower(-1.0);
     }
 
     public void setBase() {

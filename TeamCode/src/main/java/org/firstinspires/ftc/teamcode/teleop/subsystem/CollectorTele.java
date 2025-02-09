@@ -4,16 +4,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
-import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 @Config
-public class Collector implements Component {
+public class CollectorTele implements ComponentTele {
     public static double currentThreshold = 7500, extakeExtraTime = 0.5, outtakePower = -0.40;
 
     Telemetry telemetry;
@@ -24,7 +22,7 @@ public class Collector implements Component {
 
     public CollectorState collectorState;
 
-    public Collector(HardwareMap hardwareMap, Telemetry telemetry) {
+    public CollectorTele(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 
