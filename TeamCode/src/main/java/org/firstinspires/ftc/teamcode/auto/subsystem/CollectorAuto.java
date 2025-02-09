@@ -169,7 +169,6 @@ public class CollectorAuto implements ComponentAuto {
     }
 
     public class WaitForCollectionAction implements Action {
-
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             telemetry.addData("colorSensor", getDistance());

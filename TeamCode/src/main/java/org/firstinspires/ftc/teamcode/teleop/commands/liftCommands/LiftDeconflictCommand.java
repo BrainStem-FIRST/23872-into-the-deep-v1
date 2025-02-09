@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.teleop.commands.liftCommands;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.LiftTele;
 
 public class LiftDeconflictCommand extends CommandBase {
-    Lift lift;
+    LiftTele lift;
     Telemetry telemetry;
 
-    public LiftDeconflictCommand(Lift lift, Telemetry telemetry) {
+    public LiftDeconflictCommand(LiftTele lift, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.lift = lift;
     }

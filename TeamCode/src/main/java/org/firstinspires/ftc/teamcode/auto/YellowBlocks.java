@@ -12,12 +12,8 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
-import org.firstinspires.ftc.teamcode.auto.subsystem.Extension;
+import org.firstinspires.ftc.teamcode.auto.subsystem.ExtensionAuto;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 
 
@@ -92,7 +88,7 @@ public class YellowBlocks extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                robot.extension.goToPosition(0, 5),
+                                robot.extension.goToPosition(0, 3),
                                 robot.lift.gotoHighBasket(),
                                 new SleepAction(2.0),
                                 robot.depositor.gotoUp(),
@@ -114,12 +110,11 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction(),
 
-                                robot.extension.goToPosition(Extension.PARAMS.EXTENSION_RIGHT_BLOCK, Extension.PARAMS.TOLERANCE)
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
                         ),
-                        robot.collector.collectorInAction(),
-                        new SleepAction(1.5),
+                        robot.collector.waitForCollectionAction(),
                         robot.collector.collectorOffAction(),
-                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_MIN, Extension.PARAMS.TOLERANCE),
+                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
 
                         // DEPOSIT SEQUENCE
                         robot.lift.gotoGrab(),
@@ -146,10 +141,10 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction(),
-                                robot.extension.goToPosition(Extension.PARAMS.EXTENSION_LEFT_BLOCK, Extension.PARAMS.TOLERANCE)
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
                         ),
                         robot.collector.waitForCollectionAction(),
-                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_MIN, Extension.PARAMS.TOLERANCE),
+                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
                         robot.collector.collectorOffAction(),
 
                         // DEPOSIT SEQUENCE
@@ -179,14 +174,14 @@ public class YellowBlocks extends LinearOpMode {
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction(),
-                                robot.extension.goToPosition(Extension.PARAMS.EXTENSION_LEFT_BLOCK, Extension.PARAMS.TOLERANCE)
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
 
                                 ),
-                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_LEFT_BLOCK, Extension.PARAMS.TOLERANCE),
 
-                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_MIN, Extension.PARAMS.TOLERANCE),
+                        robot.collector.waitForCollectionAction(),
+                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
+                        robot.collector.collectorInAction(),
 
-                        robot.collector.collectorOffAction(),
 
                         // DEPOSIT SEQUENCE
                         robot.lift.gotoGrab(),

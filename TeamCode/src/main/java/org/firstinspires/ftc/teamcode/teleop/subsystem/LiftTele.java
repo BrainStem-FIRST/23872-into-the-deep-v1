@@ -18,8 +18,8 @@ public class LiftTele implements ComponentTele {
         public double liftKs = 0.0;
 
         public int BASE_HEIGHT = 25;
-        public int DECONFLICT_HEIGHT = 200;
-        public int GRAB_HEIGHT = 23;
+        public int DECONFLICT_HEIGHT = 250;
+        public int GRAB_HEIGHT = 35;
         public int LOW_BASKET_HEIGHT = 650;
         public int HIGH_BASKET_HEIGHT = 1100;
         public int SPECIMEN_LEVEL_HEIGHT = 75;
@@ -27,7 +27,7 @@ public class LiftTele implements ComponentTele {
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 800;
         public int HIGH_BAR_HEIGHT = 630;
         public int HIGHBAR_PRE_HEIGHT = 250;
-        public int TOLERANCE = 10;
+        public int TOLERANCE = 15;
         public double MAX_POWER_UP = 0.2;
         public double MAX_POWER_DOWN = -0.25;
         public long RESET_TIME = 500;

@@ -15,11 +15,8 @@ import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenHighBa
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.GrabSpecimenSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.ResetLiftCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
-import org.firstinspires.ftc.teamcode.teleop.commands.gripperCommands.GripperOpenCommand;
-import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftGrabCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
 import org.firstinspires.ftc.teamcode.util.Drawing;
 
 public class TeleOp extends LinearOpMode {

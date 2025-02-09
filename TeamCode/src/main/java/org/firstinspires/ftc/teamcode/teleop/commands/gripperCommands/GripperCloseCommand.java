@@ -4,16 +4,16 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.Depositor;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.DepositorTele;
 
 public class GripperCloseCommand extends CommandBase {
-    Depositor depositor;
+    DepositorTele depositor;
     Telemetry telemetry;
     ElapsedTime timer = new ElapsedTime();
 
 
 
-    public GripperCloseCommand(Depositor depositor, Telemetry telemetry) {
+    public GripperCloseCommand(DepositorTele depositor, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.depositor = depositor;
     }
@@ -30,6 +30,6 @@ public class GripperCloseCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.milliseconds() > Depositor.Params.GRIPPER_CLOSE_TIME_MS;
+        return timer.milliseconds() > DepositorTele.Params.GRIPPER_CLOSE_TIME_MS;
     }
 }

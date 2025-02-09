@@ -22,21 +22,23 @@ public class ExtensionTele implements ComponentTele {
 
     public static class Params {
         // PIDS Values
+        public double fineTunePower = 0.65;
         public double kP_Up = 0.05;//FIXME
         public double kI_Up = 0.00; //FIXME
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
 
-        public int TOLERANCE = 5;
+        public int TOLERANCE = 10;
 
         public static final int EXTENSION_MAX = 500;
         public static final int EXTENSION_MIN = 0;
-        public int EXTENSION_CUSTOM = 10;
+        public int EXTENSION_CUSTOM = 30;
         public static final int RETRACT_POSITION = 0;
     }
 
     // some variables needed for class
     public int target = 0;
+
 
 
     private double power = 0;
@@ -156,8 +158,14 @@ public class ExtensionTele implements ComponentTele {
                 break;
 
             case CUSTOM:
-                setTarget(target);
-                setMotorPower(getControlPower());
+                if(target > extension.getCurrentPosition() + PARAMS.TOLERANCE)
+                    extension.setPower(PARAMS.fineTunePower);
+                else if(target < extension.getCurrentPosition() - PARAMS.TOLERANCE)
+                    extension.setPower(-PARAMS.fineTunePower);
+                else
+                    extension.setPower(0);
+                //setTarget(target);
+                //setMotorPower(getControlPower());
                 break;
         }
     }
