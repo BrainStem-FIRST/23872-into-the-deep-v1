@@ -29,7 +29,7 @@ public class Lift implements Component {
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 800;
         public int HIGH_BAR_HEIGHT = 630;
         public int HIGHBAR_PRE_HEIGHT = 250;
-        public int TOLERANCE = 20;
+        public int TOLERANCE = 10;
         public double MAX_POWER_UP = 0.2;
         public double MAX_POWER_DOWN = -0.25;
         public long RESET_TIME = 500;
@@ -178,6 +178,7 @@ public class Lift implements Component {
 
     public void setReset() {
         liftState = LiftState.RESET;
+        liftMotor.setPower(-1.0); 
     }
 
     public void setBase() {

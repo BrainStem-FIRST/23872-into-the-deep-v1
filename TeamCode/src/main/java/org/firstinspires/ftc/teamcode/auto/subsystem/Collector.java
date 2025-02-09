@@ -89,7 +89,7 @@ public class Collector implements Component {
     }
 
     private void collectorOut() {
-        collectorMotor.setPower(1.0);
+        collectorMotor.setPower(0.6);
     }
 
     private void collectorIn() {
@@ -172,9 +172,10 @@ public class Collector implements Component {
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-
-
+            telemetry.addData("colorSensor", getDistance());
+            telemetry.update();
             return getDistance() > 3;
+
         }
     }
 }

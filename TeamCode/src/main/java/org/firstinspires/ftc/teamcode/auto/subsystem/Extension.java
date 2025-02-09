@@ -32,7 +32,7 @@ public class Extension implements Component {
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
 
-        public int TOLERANCE = 40;
+        public int TOLERANCE = 20;
 
         public int EXTENSION_MAX = 600;
         public int EXTENSION_LEFT_BLOCK = 415;
@@ -323,7 +323,9 @@ public class Extension implements Component {
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                extension.setTargetPosition(targetPosition);
+                extension.setTargetPosition(600);
+                extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                extension.setPower(1.0);
                 return Math.abs(extension.getCurrentPosition() - target) > tolerance;
             }
         };

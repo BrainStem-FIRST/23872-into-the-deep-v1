@@ -29,7 +29,7 @@ public class YellowBlocks extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
         Pose2d depositPose = new Pose2d(-59, -59, Math.toRadians(65));
-        Pose2d rightBlockPose = new Pose2d(-47, -44, Math.toRadians(90));
+        Pose2d rightBlockPose = new Pose2d(-45.5, -44, Math.toRadians(90));
         Pose2d centerBlockPose = new Pose2d(-57, -43.5, Math.toRadians(89));
         Pose2d leftBlockPose = new Pose2d(-52, -32, Math.toRadians(155));
         Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
@@ -116,9 +116,10 @@ public class YellowBlocks extends LinearOpMode {
 
                                 robot.extension.goToPosition(Extension.PARAMS.EXTENSION_RIGHT_BLOCK, Extension.PARAMS.TOLERANCE)
                         ),
-                        robot.collector.waitForCollectionAction(),
-                        //robot.extension.gotoRetract(),
+                        robot.collector.collectorInAction(),
+                        new SleepAction(1.5),
                         robot.collector.collectorOffAction(),
+                        robot.extension.goToPosition(Extension.PARAMS.EXTENSION_MIN, Extension.PARAMS.TOLERANCE),
 
                         // DEPOSIT SEQUENCE
                         robot.lift.gotoGrab(),
