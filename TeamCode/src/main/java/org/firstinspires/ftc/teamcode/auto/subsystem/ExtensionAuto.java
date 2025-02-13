@@ -37,7 +37,7 @@ public class ExtensionAuto implements ComponentAuto {
         public int EXTENSION_MAX = 600;
         public int EXTENSION_LEFT_BLOCK = 415;
         public int EXTENSION_CENTER_BLOCK = 365;
-        public int EXTENSION_RIGHT_BLOCK = 375;
+        public int EXTENSION_RIGHT_BLOCK = 250;
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static int RETRACT_POSITION = 0;
@@ -325,8 +325,16 @@ public class ExtensionAuto implements ComponentAuto {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 extension.setTargetPosition(600);
                 extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                extension.setPower(1.0);
-                return Math.abs(extension.getCurrentPosition() - target) > tolerance;
+                if(extension.getCurrentPosition() > extension.getTargetPosition()){
+                    extension.setPower(-1.0);
+                } else {
+                    extension.setPower(1.0);
+                }
+                telemetryPacket.put("extension error", (extension.getCurrentPosition() - extension.getTargetPosition()));
+                telemetryPacket.put("extension current pos", extension.getCurrentPosition());
+                telemetryPacket.put("extension target", extension.getTargetPosition());
+
+                return Math.abs(extension.getCurrentPosition() - extension.getTargetPosition()) > tolerance;
             }
         };
     }

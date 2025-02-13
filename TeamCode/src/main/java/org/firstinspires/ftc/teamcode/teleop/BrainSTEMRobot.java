@@ -46,6 +46,7 @@ public class BrainSTEMRobot {
         for (ComponentTele c : subsystems) {
             c.update();
         }
+        telemetry.update();
         drive.updatePoseEstimate();
         CommandScheduler.getInstance().run();
     }

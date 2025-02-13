@@ -82,6 +82,7 @@ public class YellowBlocks extends LinearOpMode {
         telemetry.update();
 
         robot.lift.reset();
+        robot.extension.reset();
 
         waitForStart();
 
@@ -114,9 +115,10 @@ public class YellowBlocks extends LinearOpMode {
                         ),
                         robot.collector.waitForCollectionAction(),
                         robot.collector.collectorOffAction(),
-                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
+                        robot.extension.goToPosition(20, 20),
+                        new SleepAction(500),
 
-                        // DEPOSIT SEQUENCE
+//                         DEPOSIT SEQUENCE
                         robot.lift.gotoGrab(),
                         robot.depositor.closeClaw(),
                         new SleepAction(0.25),

@@ -106,6 +106,7 @@ public class CollectorAuto implements ComponentAuto {
         }
         if (currentCounter > 10) {
             collectorMotor.setPower(0.75);
+            telemetry.addLine("FRGJUYTRF");
         }
         // collecting if there is no current spike
         else {

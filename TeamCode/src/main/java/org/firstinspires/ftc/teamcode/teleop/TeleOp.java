@@ -39,6 +39,7 @@ public class TeleOp extends LinearOpMode {
             robot.update();
             updateDrive(robot);
             updateDriver1(robot);
+            telemetry.addData("lift state", robot.lift.liftState);
             telemetry.update();
         }
     }
