@@ -120,6 +120,7 @@ public class ExtensionAuto implements ComponentAuto {
     public void incrementIn() {
         target -= PARAMS.EXTENSION_CUSTOM;
         target = Math.max(target, PARAMS.EXTENSION_MIN);
+        setMotorPower(-1.0);
     }
 
 
