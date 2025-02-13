@@ -19,7 +19,7 @@ public class ResetLiftCommand extends SequentialCommandGroup {
         super(
                 new GripperOpenCommand(robot.depositor, telemetry),
                 new DepositorDownCommand(robot.depositor, telemetry),
-                new WaitCommand(250),
+                new WaitCommand(500),
                 new LiftResetCommand(robot.lift, telemetry)
         );
 

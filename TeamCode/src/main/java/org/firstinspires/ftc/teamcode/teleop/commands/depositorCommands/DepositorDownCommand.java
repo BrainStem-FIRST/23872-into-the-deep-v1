@@ -11,8 +11,6 @@ public class DepositorDownCommand extends CommandBase {
     Telemetry telemetry;
     ElapsedTime timer = new ElapsedTime();
 
-
-
     public DepositorDownCommand(DepositorTele depositor, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.depositor = depositor;
