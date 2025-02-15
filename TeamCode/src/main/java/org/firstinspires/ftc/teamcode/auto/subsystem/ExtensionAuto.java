@@ -27,17 +27,17 @@ public class ExtensionAuto implements ComponentAuto {
 
     public static class Params {
         // PIDS Values
-        public double kP_Up = 0.05;//FIXME
-        public double kI_Up = 0.00; //FIXME
+        public double kP_Up = 0.07;//FIXME
+        public double kI_Up = 0.01; //FIXME
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
 
-        public int TOLERANCE = 20;
+        public int TOLERANCE = 50;
 
         public int EXTENSION_MAX = 600;
         public int EXTENSION_LEFT_BLOCK = 415;
         public int EXTENSION_CENTER_BLOCK = 365;
-        public int EXTENSION_RIGHT_BLOCK = 250;
+        public int EXTENSION_RIGHT_BLOCK = 390;
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static int RETRACT_POSITION = 0;
@@ -70,7 +70,7 @@ public class ExtensionAuto implements ComponentAuto {
         extension = new CachingMotor(map.get(DcMotorEx.class, "extension"));
         extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extensionLimitSwitch = hwMap.get(DigitalChannel.class, "eLimitSwitch");
     }
 
@@ -152,7 +152,7 @@ public class ExtensionAuto implements ComponentAuto {
                     setCustom();
                 } else {
                     extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    setMotorPower(-1.0);
+                    setMotorPower(-0.99);
                 }
                 break;
 
@@ -323,19 +323,28 @@ public class ExtensionAuto implements ComponentAuto {
     public Action goToPosition(int targetPosition, int tolerance) {
         return new Action() {
             @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                extension.setTargetPosition(600);
-                extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                if(extension.getCurrentPosition() > extension.getTargetPosition()){
-                    extension.setPower(-1.0);
-                } else {
-                    extension.setPower(1.0);
-                }
-                telemetryPacket.put("extension error", (extension.getCurrentPosition() - extension.getTargetPosition()));
-                telemetryPacket.put("extension current pos", extension.getCurrentPosition());
-                telemetryPacket.put("extension target", extension.getTargetPosition());
+            public boolean run(@NonNull TelemetryPacket packet) {
+                // Set the target position
+                extension.setTargetPosition(targetPosition);
 
-                return Math.abs(extension.getCurrentPosition() - extension.getTargetPosition()) > tolerance;
+                // Set the motor to RUN_TO_POSITION mode
+                extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // Set the motor power
+                extension.setPower(0.5); // Adjust power as needed
+
+                // Add telemetry for debugging
+                packet.put("Extension Current Position", extension.getCurrentPosition());
+                packet.put("Extension Target Position", extension.getTargetPosition());
+                packet.put("Extension Error", extension.getCurrentPosition() - extension.getTargetPosition());
+
+                // Check if the motor is within the tolerance
+                boolean isComplete = Math.abs(extension.getCurrentPosition() - extension.getTargetPosition()) <= tolerance;
+
+                packet.put("Iscomplete Extension: ", isComplete);
+
+                // Return true if the action is complete
+                return isComplete;
             }
         };
     }

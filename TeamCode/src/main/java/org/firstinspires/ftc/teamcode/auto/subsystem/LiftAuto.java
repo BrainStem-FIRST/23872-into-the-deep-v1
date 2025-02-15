@@ -250,6 +250,7 @@ public class LiftAuto implements ComponentAuto {
             }
 
             update();
+            packet.addLine("Lift in tolerance?" + inTightTolerance());
             return !inTightTolerance();
         }
     }
