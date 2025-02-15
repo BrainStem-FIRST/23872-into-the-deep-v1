@@ -35,6 +35,10 @@ public class ExtensionAuto implements ComponentAuto {
         public int TOLERANCE = 50;
 
         public int EXTENSION_MAX = 600;
+
+        public int EXTENSION_2ND_LEFT = 365;
+        public int EXTENSION_2ND_CENTER = 315;
+        public int EXTENSION_2ND_RIGHT = 340;
         public int EXTENSION_LEFT_BLOCK = 415;
         public int EXTENSION_CENTER_BLOCK = 365;
         public int EXTENSION_RIGHT_BLOCK = 390;

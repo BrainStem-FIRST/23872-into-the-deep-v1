@@ -26,7 +26,7 @@ public class YellowBlocks extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
         Pose2d depositPose = new Pose2d(-60, -59, Math.toRadians(65));
-        Pose2d rightBlockPose = new Pose2d(-47, -44, Math.toRadians(90));
+        Pose2d rightBlockPose = new Pose2d(-48, -44, Math.toRadians(90));
         Pose2d centerBlockPose = new Pose2d(-57.5, -43.5, Math.toRadians(89));
         Pose2d leftBlockPose = new Pose2d(-52, -32, Math.toRadians(155));
         Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
@@ -90,7 +90,6 @@ public class YellowBlocks extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                 robot.lift.gotoHighBasket(),
                                 new SleepAction(2.0),
                                 robot.depositor.gotoUp(),
@@ -108,13 +107,17 @@ public class YellowBlocks extends LinearOpMode {
 
                         // COLLECT SEQUENCE
                         new ParallelAction(
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
                                 robot.collector.collectorInAction()
                         ),
+                        new ParallelAction(
+                                robot.collector.waitForCollectionAction(),
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_2ND_RIGHT, ExtensionAuto.PARAMS.TOLERANCE)
+                        ),
                         robot.collector.waitForCollectionAction(),
                         robot.collector.collectorOffAction(),
-                        new SleepAction(0.25),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
 
 //                         DEPOSIT SEQUENCE
@@ -140,14 +143,14 @@ public class YellowBlocks extends LinearOpMode {
 
                         // COLLECT SEQUENCE
                         new ParallelAction(
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
-                                robot.collector.collectorInAction(),
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
+                                robot.collector.collectorInAction()
                         ),
                         robot.collector.waitForCollectionAction(),
-                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
                         robot.collector.collectorOffAction(),
+                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
 
                         // DEPOSIT SEQUENCE
                         new SleepAction(0.35),
@@ -174,16 +177,19 @@ public class YellowBlocks extends LinearOpMode {
 
                         // COLLECT SEQUENCE
                         new ParallelAction(
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                 robot.lift.gotoDeconflict(),
                                 robot.depositor.gotoDown(),
-                                robot.collector.collectorInAction(),
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
+                                robot.collector.collectorInAction()
 
                                 ),
 
-                        robot.collector.waitForCollectionAction(),
-                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
+                        new ParallelAction(
+                                robot.collector.waitForCollectionAction(),
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_2ND_LEFT, ExtensionAuto.PARAMS.TOLERANCE)
+                        ),
                         robot.collector.collectorInAction(),
+                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
 
 
                         // DEPOSIT SEQUENCE

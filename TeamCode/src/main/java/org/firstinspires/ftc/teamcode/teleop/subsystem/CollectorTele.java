@@ -76,24 +76,39 @@ public class CollectorTele implements ComponentTele {
         collectorMotor.setPower(0.0);
     }
     private void collectorIn() {
-        // checking for a current spike
-        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > currentThreshold) {
-            currentCounter += 1;
-            extakeExtraTimer.reset();
-            // resetting current count timer once pass a safety extake threshold
-        } else {
-            if(extakeExtraTimer.seconds() > extakeExtraTime)
-                currentCounter = 0;
+        // Define thresholds and constants (if not already defined globally)
+        final double CURRENT_THRESHOLD = 7500; // Current threshold in milliamps
+        final int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
+        final double COLLECT_POWER = 0.75; // Power for normal collection
+        final double UNJAM_POWER = -0.99; // Power for unjamming (reverse direction)
+        final double UNJAM_TIMEOUT = 0.5; // Timeout for resetting current counter (in seconds)
 
-            // extaking once current has spike for a validated amount of frames
+        // Check for a current spike indicating a jam
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > CURRENT_THRESHOLD) {
+            currentCounter += 1; // Increment the jam counter
+            extakeExtraTimer.reset(); // Reset the unjam timer
+        } else {
+            // Reset the current counter if no jam is detected for the timeout period
+            if (extakeExtraTimer.seconds() > UNJAM_TIMEOUT) {
+                currentCounter = 0;
+            }
         }
-        if (currentCounter > 10) {
-            collectorMotor.setPower(outtakePower);
+
+        // If a jam is detected for the required number of frames, unjam the collector
+        if (currentCounter > JAM_FRAME_COUNT) {
+            collectorMotor.setPower(UNJAM_POWER); // Reverse the motor to unjam
+            telemetry.addData("Collector Status", "Unjamming Block");
+        } else {
+            // Otherwise, continue collecting
+            collectorMotor.setPower(COLLECT_POWER);
+            telemetry.addData("Collector Status", "Collecting");
         }
-        // collecting if there is no current spike
-        else {
-            collectorMotor.setPower(0.99);
-        }
+
+        // Add telemetry for debugging
+        telemetry.addData("Collector Current (mA)", collectorMotor.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("Current Counter", currentCounter);
+        telemetry.addData("Unjam Timer (s)", extakeExtraTimer.seconds());
+        telemetry.update();
     }
 
     private void collectorOut() {

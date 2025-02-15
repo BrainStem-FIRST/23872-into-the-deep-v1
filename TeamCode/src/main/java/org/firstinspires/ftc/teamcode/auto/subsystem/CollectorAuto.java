@@ -19,8 +19,6 @@ import org.firstinspires.ftc.teamcode.util.CachingMotor;
 @Config
 public class CollectorAuto implements ComponentAuto {
 
-    public static double currentThreshold = 7500, extakeExtraTime = 0.5, outtakePower = -0.40;
-
     public static class Params {
 
     }
@@ -97,11 +95,11 @@ public class CollectorAuto implements ComponentAuto {
 
     private void collectorIn() {
         // Define thresholds and constants
-        final double CURRENT_THRESHOLD = currentThreshold; // Current threshold in milliamps
+        final double CURRENT_THRESHOLD = 7500; // Current threshold in milliamps
         final int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
-        final double COLLECT_POWER = -0.99; // Power for normal collection
-        final double UNJAM_POWER = 0.5; // Power for unjamming
-        final double UNJAM_TIMEOUT = 2.0; // Timeout for resetting current counter (in seconds)
+        final double COLLECT_POWER = -0.75; // Power for normal collection
+        final double UNJAM_POWER = 0.99; // Power for unjamming
+        final double UNJAM_TIMEOUT = 0.5; // Timeout for resetting current counter (in seconds)
 
         // Check for a current spike indicating a jam
         if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > CURRENT_THRESHOLD) {
