@@ -77,9 +77,9 @@ public class CollectorTele implements ComponentTele {
     }
     private void collectorIn() {
         // Define thresholds and constants (if not already defined globally)
-        final double CURRENT_THRESHOLD = 7500; // Current threshold in milliamps
+        final double CURRENT_THRESHOLD = 10000; // Current threshold in milliamps
         final int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
-        final double COLLECT_POWER = 0.75; // Power for normal collection
+        final double COLLECT_POWER = 0.65; // Power for normal collection
         final double UNJAM_POWER = -0.99; // Power for unjamming (reverse direction)
         final double UNJAM_TIMEOUT = 0.5; // Timeout for resetting current counter (in seconds)
 

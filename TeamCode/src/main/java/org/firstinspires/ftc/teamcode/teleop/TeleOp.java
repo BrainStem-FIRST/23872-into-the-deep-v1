@@ -29,7 +29,7 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap);
+        BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, gamepad1);
         resetLiftCommand = new ResetLiftCommand(robot, telemetry);
         timer = new ElapsedTime();
 

@@ -32,16 +32,16 @@ public class ExtensionAuto implements ComponentAuto {
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
 
-        public int TOLERANCE = 50;
+        public int TOLERANCE = 35;
 
         public int EXTENSION_MAX = 600;
 
-        public int EXTENSION_2ND_LEFT = 365;
-        public int EXTENSION_2ND_CENTER = 315;
-        public int EXTENSION_2ND_RIGHT = 340;
+        public int EXTENSION_2ND_LEFT = 345;
+        public int EXTENSION_2ND_CENTER = 340;
+        public int EXTENSION_2ND_RIGHT = 360;
         public int EXTENSION_LEFT_BLOCK = 415;
-        public int EXTENSION_CENTER_BLOCK = 365;
-        public int EXTENSION_RIGHT_BLOCK = 390;
+        public int EXTENSION_CENTER_BLOCK = 430;
+        public int EXTENSION_RIGHT_BLOCK = 450;
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static int RETRACT_POSITION = 0;

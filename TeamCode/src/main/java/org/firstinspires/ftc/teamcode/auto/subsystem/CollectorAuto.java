@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.CachingMotor;
 public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
-
+        public double maxAutoCollectTime = 2.5;
     }
 
     Telemetry telemetry;
@@ -94,11 +94,11 @@ public class CollectorAuto implements ComponentAuto {
     }
 
     private void collectorIn() {
-        // Define thresholds and constants
-        final double CURRENT_THRESHOLD = 7500; // Current threshold in milliamps
+        // Define thresholds and constants (if not already defined globally)
+        final double CURRENT_THRESHOLD = 10000; // Current threshold in milliamps
         final int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
-        final double COLLECT_POWER = -0.75; // Power for normal collection
-        final double UNJAM_POWER = 0.99; // Power for unjamming
+        final double COLLECT_POWER = -0.65; // Power for normal collection
+        final double UNJAM_POWER = 0.99; // Power for unjamming (reverse direction)
         final double UNJAM_TIMEOUT = 0.5; // Timeout for resetting current counter (in seconds)
 
         // Check for a current spike indicating a jam
@@ -185,8 +185,15 @@ public class CollectorAuto implements ComponentAuto {
     }
 
     public class WaitForCollectionAction implements Action {
+        ElapsedTime timer = new ElapsedTime();
+        boolean first = true;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+            if (first) {
+                timer.reset();
+                first = false;
+            }
+
             // Get the current distance from the color sensor
             double distance = getDistance();
 
@@ -195,7 +202,7 @@ public class CollectorAuto implements ComponentAuto {
             telemetry.update();
 
             // Return true if the block is detected (distance <= 3)
-            return distance >= 3;
+            return distance >= 3 && timer.seconds() < PARAMS.maxAutoCollectTime;
         }
     }
 }

@@ -21,7 +21,7 @@ public class LiftTele implements ComponentTele {
         public int DECONFLICT_HEIGHT = 190;
         public int GRAB_HEIGHT = 35;
         public int LOW_BASKET_HEIGHT = 650;
-        public int HIGH_BASKET_HEIGHT = 1175;
+        public int HIGH_BASKET_HEIGHT = 1200;
         public int SPECIMEN_LEVEL_HEIGHT = 75;
         public int LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT = 250;
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 800;

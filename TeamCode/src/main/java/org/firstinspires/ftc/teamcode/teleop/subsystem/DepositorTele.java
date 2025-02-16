@@ -18,7 +18,7 @@ public class DepositorTele implements ComponentTele {
         public double depositorHighBasket = 0.5;
         public double depositorNeutralPosition = 0.5;
         public double gripperClosedPosition = 0.99;
-        public double gripperOpenedPosition = 0.075;
+        public double gripperOpenedPosition = 0.065;
         public double gripperLowerPWM = 400;
         public double gripperUpperPWM = 1700;
 

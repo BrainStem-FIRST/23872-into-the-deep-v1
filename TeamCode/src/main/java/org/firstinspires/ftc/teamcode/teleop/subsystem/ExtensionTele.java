@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -22,7 +23,7 @@ public class ExtensionTele implements ComponentTele {
 
     public static class Params {
         // PIDS Values
-        public double fineTunePower = 0.65;
+        public double fineTunePower = 0.75;
         public double kP_Up = 0.05;//FIXME
         public double kI_Up = 0.00; //FIXME
         public double kD_Up = 0.000;//FIXME
@@ -52,9 +53,11 @@ public class ExtensionTele implements ComponentTele {
 
     public static ExtensionTele.Params PARAMS = new ExtensionTele.Params();
 
+    private Gamepad gamepad1;
 
     // constructor for Extension class
-    public ExtensionTele(HardwareMap hwMap, Telemetry telemetry) {
+    public ExtensionTele(HardwareMap hwMap, Telemetry telemetry, Gamepad gamepad1) {
+        this.gamepad1 = gamepad1;
         extensionController = new PIDController(PARAMS.kP_Up, PARAMS.kI_Up, PARAMS.kD_Up);
         this.telemetry = telemetry;
         this.map = hwMap;
@@ -158,12 +161,23 @@ public class ExtensionTele implements ComponentTele {
                 break;
 
             case CUSTOM:
+                /*
                 if(target > extension.getCurrentPosition() + PARAMS.TOLERANCE)
                     extension.setPower(PARAMS.fineTunePower);
                 else if(target < extension.getCurrentPosition() - PARAMS.TOLERANCE)
                     extension.setPower(-PARAMS.fineTunePower);
                 else
                     extension.setPower(0);
+
+                 */
+
+                if(gamepad1.dpad_up)
+                    extension.setPower(PARAMS.fineTunePower);
+                else if(gamepad1.dpad_down)
+                    extension.setPower(-PARAMS.fineTunePower);
+                else
+                    extension.setPower(0);
+
                 //setTarget(target);
                 //setMotorPower(getControlPower());
                 break;

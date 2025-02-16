@@ -16,20 +16,20 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 public class LiftAuto implements ComponentAuto {
     public static class Params {
         ;
-        public double liftKp = 0.02;
-        public double liftKi = 0.01;
+        public double liftKp = 0.04;
+        public double liftKi = 0.015;
         public double liftKd = 0.0001;
 
         public int BASE_HEIGHT = 25;
         public int DECONFLICT_HEIGHT = 200;
         public int GRAB_HEIGHT = 15;
         public int LOW_BASKET_HEIGHT = 600;
-        public int HIGH_BASKET_HEIGHT = 1000;
+        public int HIGH_BASKET_HEIGHT = 1200;
         public int SPECIMEN_LEVEL_HEIGHT = 80;
         public int LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT = 200;
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 500;
         public int HIGH_BAR_HEIGHT = 800;
-        public int TOLERANCE = 30;
+        public int TOLERANCE = 15;
     }
 
     PIDController liftController;
