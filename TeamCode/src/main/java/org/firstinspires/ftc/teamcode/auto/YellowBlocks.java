@@ -121,7 +121,7 @@ public class YellowBlocks extends LinearOpMode {
 
 //                         DEPOSIT SEQUENCE
                         new SleepAction(0.25),
-                        robot.lift.gotoGrab(),
+                        robot.lift.goToGrabFast(),
                         new SleepAction(0.15),
                         robot.depositor.closeClaw(),
                         new SleepAction(0.25),

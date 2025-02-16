@@ -30,6 +30,7 @@ public class LiftAuto implements ComponentAuto {
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 500;
         public int HIGH_BAR_HEIGHT = 800;
         public int TOLERANCE = 15;
+        public int GRAB_VELOCITY_TOLERANCE = 5;
     }
 
     PIDController liftController;
@@ -233,6 +234,20 @@ public class LiftAuto implements ComponentAuto {
             update();
             return !inTightTolerance();
         }
+    }
+    public Action goToGrabFast() {
+        return new Action() {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                telemetryPacket.put("grab fast  `", "running");
+                liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftMotor.setPower(-1);
+                if (liftMotor.getCurrentPosition() >= PARAMS.DECONFLICT_HEIGHT - PARAMS.TOLERANCE * 2)
+                    return true;
+                return liftMotor.getVelocity() > PARAMS.GRAB_VELOCITY_TOLERANCE;
+            }
+        };
     }
 
     public Action gotoGrab() {
