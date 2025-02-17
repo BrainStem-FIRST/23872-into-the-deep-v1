@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.hardware.lynx.commands.standard.LynxSetModuleLEDPatternCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -104,14 +105,16 @@ public class YellowBlocks extends LinearOpMode {
                         new SleepAction(0.15),
 
                         // RIGHT BLOCK
-                        rightBlock,
 
                         // COLLECT SEQUENCE
                         new ParallelAction(
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
+                                rightBlock,
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
+                        ),
+                        new ParallelAction(
+                                robot.collector.collectorInAction(),
                                 robot.lift.gotoDeconflict(),
-                                robot.depositor.gotoDown(),
-                                robot.collector.collectorInAction()
+                                robot.depositor.gotoDown()
                         ),
                         robot.collector.waitForCollectionAction(),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
@@ -139,13 +142,15 @@ public class YellowBlocks extends LinearOpMode {
 
                         // CENTER BLOCK
 
-                            centerBlock,
 
                         new ParallelAction(
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
+                                centerBlock,
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
+                        ),
+                        new ParallelAction(
+                                robot.collector.collectorInAction(),
                                 robot.lift.gotoDeconflict(),
-                                robot.depositor.gotoDown(),
-                                robot.collector.collectorInAction()
+                                robot.depositor.gotoDown()
                         ),
                         robot.collector.waitForCollectionAction(),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
@@ -172,23 +177,20 @@ public class YellowBlocks extends LinearOpMode {
                         robot.depositor.gotoUp(),
 
                         // LEFT BLOCK
-                        leftBlock,
 
                         // COLLECT SEQUENCE
                         new ParallelAction(
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
-                                robot.lift.gotoDeconflict(),
-                                robot.depositor.gotoDown(),
-                                robot.collector.collectorInAction()
-
-                                ),
-
-                        new ParallelAction(
-                                robot.collector.waitForCollectionAction(),
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_2ND_LEFT, ExtensionAuto.PARAMS.TOLERANCE)
+                                leftBlock,
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE)
                         ),
+                        new ParallelAction(
+                                robot.collector.collectorInAction(),
+                                robot.lift.gotoDeconflict(),
+                                robot.depositor.gotoDown()
+                        ),
+                        robot.collector.waitForCollectionAction(),
+                        robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
                         robot.collector.collectorOffAction(),
-                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_MIN, ExtensionAuto.PARAMS.TOLERANCE),
 
 
                         // DEPOSIT SEQUENCE
@@ -198,11 +200,12 @@ public class YellowBlocks extends LinearOpMode {
                         robot.depositor.closeClaw(),
                         new SleepAction(0.25),
                         robot.lift.gotoDeconflict(),
+                        new SleepAction(0.1),
                         robot.depositor.gotoUp(),
-                        new SleepAction(0.2),
+                        new SleepAction(0.15),
                         robot.lift.gotoHighBasket(),
                         depositLeftBlock,
-                        new SleepAction(1.0),
+                        new SleepAction(0.1),
 
                         // RETRACT SEQUENCE
                         robot.depositor.gotoBackward(),

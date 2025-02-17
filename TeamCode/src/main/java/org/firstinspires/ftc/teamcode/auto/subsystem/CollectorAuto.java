@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.CachingMotor;
 public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
-        public double maxAutoCollectTime = 1.5  ;
+        public double maxAutoCollectTime = 1.0  ;
     }
 
     Telemetry telemetry;
