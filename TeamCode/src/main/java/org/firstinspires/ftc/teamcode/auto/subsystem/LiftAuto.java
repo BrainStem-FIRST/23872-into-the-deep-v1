@@ -240,7 +240,7 @@ public class LiftAuto implements ComponentAuto {
 
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                telemetryPacket.put("grab fast  `", "running");
+                telemetryPacket.put("grab fast", "running");
                 liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 liftMotor.setPower(-1);
                 if (liftMotor.getCurrentPosition() >= PARAMS.DECONFLICT_HEIGHT - PARAMS.TOLERANCE * 2)
