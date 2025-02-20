@@ -29,7 +29,7 @@ public class YellowBlocks extends LinearOpMode {
         Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
         Pose2d depositPose = new Pose2d(-60, -59, Math.toRadians(65));
         Pose2d rightBlockPose = new Pose2d(-46.5, -44, Math.toRadians(90));
-        Pose2d centerBlockPose = new Pose2d(-56.5, -43.5, Math.toRadians(89));
+        Pose2d centerBlockPose = new Pose2d(-58.5, -43.5, Math.toRadians(89));
         Pose2d leftBlockPose = new Pose2d(-50.5, -32, Math.toRadians(155));
         Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
 
@@ -113,7 +113,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
-                                        new SleepAction(5.0),
+                                      //  new SleepAction(2.5),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
@@ -152,6 +152,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
+                                    //    new SleepAction(2.5),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
@@ -190,6 +191,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
+                                    //    new SleepAction(2.5),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()

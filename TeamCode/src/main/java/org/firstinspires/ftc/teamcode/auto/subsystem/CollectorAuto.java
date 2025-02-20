@@ -20,7 +20,13 @@ import org.firstinspires.ftc.teamcode.util.CachingMotor;
 public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
+        public double ColorSensorDistance = 1.0 ;
         public double maxAutoCollectTime = 3.0  ;
+        public double CURRENT_THRESHOLD = 5000; // Current threshold in milliamps
+        public int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
+        public double COLLECT_POWER = -0.80; // Power for normal collection
+        public double UNJAM_POWER = 0.50; // Power for unjamming (reverse direction)
+        public double UNJAM_TIMEOUT = 0.5; // Timeout for resetting current counter (in seconds)
     }
 
     Telemetry telemetry;
@@ -95,30 +101,26 @@ public class CollectorAuto implements ComponentAuto {
 
     private void collectorIn() {
         // Define thresholds and constants (if not already defined globally)
-        final double CURRENT_THRESHOLD = 10000; // Current threshold in milliamps
-        final int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
-        final double COLLECT_POWER = -0.65; // Power for normal collection
-        final double UNJAM_POWER = 0.99; // Power for unjamming (reverse direction)
-        final double UNJAM_TIMEOUT = 0.5; // Timeout for resetting current counter (in seconds)
+
 
         // Check for a current spike indicating a jam
-        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > CURRENT_THRESHOLD) {
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > PARAMS.CURRENT_THRESHOLD) {
             currentCounter += 1; // Increment the jam counter
             extakeExtraTimer.reset(); // Reset the unjam timer
         } else {
             // Reset the current counter if no jam is detected for the timeout period
-            if (extakeExtraTimer.seconds() > UNJAM_TIMEOUT) {
+            if (extakeExtraTimer.seconds() > PARAMS.UNJAM_TIMEOUT) {
                 currentCounter = 0;
             }
         }
 
         // If a jam is detected for the required number of frames, unjam the collector
-        if (currentCounter > JAM_FRAME_COUNT) {
-            collectorMotor.setPower(UNJAM_POWER); // Reverse the motor to unjam
+        if (currentCounter > PARAMS.JAM_FRAME_COUNT) {
+            collectorMotor.setPower(PARAMS.UNJAM_POWER); // Reverse the motor to unjam
             telemetry.addData("Collector Status", "Unjamming Block");
         } else {
             // Otherwise, continue collecting
-            collectorMotor.setPower(COLLECT_POWER);
+            collectorMotor.setPower(PARAMS.COLLECT_POWER);
             telemetry.addData("Collector Status", "Collecting");
         }
 
@@ -201,10 +203,10 @@ public class CollectorAuto implements ComponentAuto {
             telemetry.addData("Color Sensor Distance", distance);
             telemetry.update();
 
-            packet.put("is finished", distance > 3 && timer.seconds() < PARAMS.maxAutoCollectTime);
+      //      packet.put("is finished", distance > PARAMS.ColorSensorDistance && timer.seconds() < PARAMS.maxAutoCollectTime);
 
             // Return true if the block is detected (distance <= 3)
-            return distance > 3 && timer.seconds() < PARAMS.maxAutoCollectTime;
+            return distance > PARAMS.ColorSensorDistance && timer.seconds() < PARAMS.maxAutoCollectTime;
         }
     }
 }
