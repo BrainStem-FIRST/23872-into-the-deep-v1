@@ -113,6 +113,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
+                                        new SleepAction(5.0),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()

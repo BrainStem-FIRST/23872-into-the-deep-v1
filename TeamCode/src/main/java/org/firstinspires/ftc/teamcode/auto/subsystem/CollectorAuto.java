@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.CachingMotor;
 public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
-        public double maxAutoCollectTime = 2.0  ;
+        public double maxAutoCollectTime = 3.0  ;
     }
 
     Telemetry telemetry;
@@ -201,11 +201,10 @@ public class CollectorAuto implements ComponentAuto {
             telemetry.addData("Color Sensor Distance", distance);
             telemetry.update();
 
-//            packet.put("is finished", distance > 3 && timer.seconds() < PARAMS.maxAutoCollectTime);
+            packet.put("is finished", distance > 3 && timer.seconds() < PARAMS.maxAutoCollectTime);
 
             // Return true if the block is detected (distance <= 3)
-            return distance > 3;
-            //&& timer.seconds() < PARAMS.maxAutoCollectTime;
+            return distance > 3 && timer.seconds() < PARAMS.maxAutoCollectTime;
         }
     }
 }
