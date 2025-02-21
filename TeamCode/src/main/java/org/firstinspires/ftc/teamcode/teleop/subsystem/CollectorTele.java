@@ -15,7 +15,7 @@ public class CollectorTele implements ComponentTele {
     public static double currentThreshold = 7500, extakeExtraTime = 0.5, outtakePower = -0.40;
     public static double CURRENT_THRESHOLD = 5000; // Current threshold in milliamps
     public static int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
-    public static double COLLECT_POWER = 0.99; // Power for normal collection
+    public static double COLLECT_POWER = 0.80; // Power for normal collection
     public static double UNJAM_POWER = -0.50; // Power for unjamming (reverse direction)
     public static double UNJAM_TIMEOUT = 0.25; // Timeout for resetting current counter (in seconds)
 
