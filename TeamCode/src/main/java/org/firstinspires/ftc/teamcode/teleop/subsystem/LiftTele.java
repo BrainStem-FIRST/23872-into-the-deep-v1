@@ -3,15 +3,13 @@ package org.firstinspires.ftc.teamcode.teleop.subsystem;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @Config
-public class Lift implements Component {
+public class LiftTele implements ComponentTele {
     public static class Params {
         ;
         public double liftKp = 0.01;
@@ -20,8 +18,13 @@ public class Lift implements Component {
         public double liftKs = 0.0;
 
         public int BASE_HEIGHT = 25;
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/Lift.java
         public int DECONFLICT_HEIGHT = 150;
         public int GRAB_HEIGHT = 23;
+=======
+        public int DECONFLICT_HEIGHT = 190;
+        public int GRAB_HEIGHT = 35;
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/LiftTele.java
         public int LOW_BASKET_HEIGHT = 650;
         public int HIGH_BASKET_HEIGHT = 1200;
         public int SPECIMEN_LEVEL_HEIGHT = 75;
@@ -29,7 +32,7 @@ public class Lift implements Component {
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 800;
         public int HIGH_BAR_HEIGHT = 630;
         public int HIGHBAR_PRE_HEIGHT = 250;
-        public int TOLERANCE = 20;
+        public int TOLERANCE = 30;
         public double MAX_POWER_UP = 0.2;
         public double MAX_POWER_DOWN = -0.25;
         public long RESET_TIME = 500;
@@ -42,7 +45,7 @@ public class Lift implements Component {
     public DcMotorEx liftMotor;
     public LiftState liftState;
 
-    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
+    public LiftTele(HardwareMap hardwareMap, Telemetry telemetry) {
         liftController = new PIDController(PARAMS.liftKp, PARAMS.liftKi, PARAMS.liftKd, telemetry);
         liftController.setInputBounds(0, 1500);
         liftController.setOutputBounds(-0.1, 0.99);
@@ -178,6 +181,7 @@ public class Lift implements Component {
 
     public void setReset() {
         liftState = LiftState.RESET;
+        liftMotor.setPower(-1.0);
     }
 
     public void setBase() {

@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 @Config
-public class Extension implements Component {
+public class ExtensionAuto implements ComponentAuto {
 
     // initialization
     private Telemetry telemetry;
@@ -27,18 +27,33 @@ public class Extension implements Component {
 
     public static class Params {
         // PIDS Values
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Extension.java
         public double kP_Up = 0.02;//FIXME
         public double kI_Up = 0.00; //FIXME
+=======
+        public double kP_Up = 0.07;//FIXME
+        public double kI_Up = 0.01; //FIXME
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/ExtensionAuto.java
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
 
-        public int TOLERANCE = 40;
+        public int TOLERANCE = 35;
 
         public int EXTENSION_MAX = 600;
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Extension.java
         public int EXTENSION_LEFT_BLOCK = 415;
         public int EXTENSION_CENTER_BLOCK = 365;
         public int EXTENSION_HUMAN_BLOCK = 600;
         public int EXTENSION_RIGHT_BLOCK = 375;
+=======
+
+        public int EXTENSION_2ND_LEFT = 345;
+        public int EXTENSION_2ND_CENTER = 340;
+        public int EXTENSION_2ND_RIGHT = 360;
+        public int EXTENSION_LEFT_BLOCK = 410 + 5;
+        public int EXTENSION_CENTER_BLOCK = 450 + 5;
+        public int EXTENSION_RIGHT_BLOCK = 430 + 5;
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/ExtensionAuto.java
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static int RETRACT_POSITION = 0;
@@ -61,17 +76,24 @@ public class Extension implements Component {
 
 
     // constructor for Extension class
-    public Extension(HardwareMap hwMap, Telemetry telemetry) {
+    public ExtensionAuto(HardwareMap hwMap, Telemetry telemetry) {
         extensionController = new PIDController(PARAMS.kP_Up, PARAMS.kI_Up, PARAMS.kD_Up);
         this.telemetry = telemetry;
         this.map = hwMap;
 
         extensionController.setInputBounds(PARAMS.EXTENSION_MIN, PARAMS.EXTENSION_MAX);
         extensionController.setOutputBounds(-1.0, 1.0);
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Extension.java
         extensionMotor = new CachingMotor(map.get(DcMotorEx.class, "extension"));
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+=======
+        extension = new CachingMotor(map.get(DcMotorEx.class, "extension"));
+        extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/ExtensionAuto.java
         extensionLimitSwitch = hwMap.get(DigitalChannel.class, "eLimitSwitch");
     }
 
@@ -121,6 +143,7 @@ public class Extension implements Component {
     public void incrementIn() {
         target -= PARAMS.EXTENSION_CUSTOM;
         target = Math.max(target, PARAMS.EXTENSION_MIN);
+        setMotorPower(-1.0);
     }
 
 
@@ -168,8 +191,13 @@ public class Extension implements Component {
                     target = 0;
                     setCustom();
                 } else {
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Extension.java
                     extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     setMotorPower(-1.0);
+=======
+                    extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    setMotorPower(-0.99);
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/ExtensionAuto.java
                 }
                 break;
 
@@ -306,9 +334,34 @@ public class Extension implements Component {
 
         return new Action() {
             @Override
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Extension.java
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 setExtensionPower(targetPosition);
                 return Math.abs(extensionMotor.getCurrentPosition() - target) > tolerance;
+=======
+            public boolean run(@NonNull TelemetryPacket packet) {
+                // Set the target position
+                extension.setTargetPosition(targetPosition);
+
+                // Set the motor to RUN_TO_POSITION mode
+                extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // Set the motor power
+                extension.setPower(0.5); // Adjust power as needed
+
+                // Add telemetry for debugging
+                packet.put("Extension Current Position", extension.getCurrentPosition());
+                packet.put("Extension Target Position", extension.getTargetPosition());
+                packet.put("Extension Error", extension.getCurrentPosition() - extension.getTargetPosition());
+
+                // Check if the motor is within the tolerance
+                boolean isComplete = Math.abs(extension.getCurrentPosition() - extension.getTargetPosition()) <= tolerance;
+
+                packet.put("Iscomplete Extension: ", isComplete);
+
+                // Return true if the action is complete
+                return isComplete;
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/ExtensionAuto.java
             }
         };
     }

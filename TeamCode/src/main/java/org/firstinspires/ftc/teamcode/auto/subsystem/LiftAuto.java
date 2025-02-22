@@ -13,11 +13,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
 @Config
-public class Lift implements Component {
+public class LiftAuto implements ComponentAuto {
     public static class Params {
         ;
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Lift.java
         public double liftKp = 0.09;
         public double liftKi = 0.01;
+=======
+        public double liftKp = 0.04;
+        public double liftKi = 0.015;
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/LiftAuto.java
         public double liftKd = 0.0001;
 
         public int BASE_HEIGHT = 25;
@@ -29,8 +34,13 @@ public class Lift implements Component {
         public int LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT = 200;
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 500;
         public int HIGH_BAR_HEIGHT = 800;
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Lift.java
         public int TOLERANCE = 30;
         public double kS = 0.0;
+=======
+        public int TOLERANCE = 15;
+        public int GRAB_VELOCITY_TOLERANCE = 5;
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/LiftAuto.java
     }
 
     PIDController liftController;
@@ -43,7 +53,7 @@ public class Lift implements Component {
     public double power = 0.0;
     public double error = 0.0;
 
-    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
+    public LiftAuto(HardwareMap hardwareMap, Telemetry telemetry) {
         liftController = new PIDController(PARAMS.liftKp, PARAMS.liftKi, PARAMS.liftKd);
         liftController.setInputBounds(0, 4000);
         liftController.setOutputBounds(-0.2, 1.0);
@@ -213,6 +223,20 @@ public class Lift implements Component {
             return !inTightTolerance();
         }
     }
+    public Action goToGrabFast() {
+        return new Action() {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                telemetryPacket.put("grab fast", "running");
+                liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftMotor.setPower(-1);
+                if (liftMotor.getCurrentPosition() >= PARAMS.DECONFLICT_HEIGHT - PARAMS.TOLERANCE * 2)
+                    return true;
+                return liftMotor.getVelocity() > PARAMS.GRAB_VELOCITY_TOLERANCE;
+            }
+        };
+    }
 
     public Action gotoGrab() {
         return new GotoGrab();
@@ -233,7 +257,12 @@ public class Lift implements Component {
             telemetry.update();
 
             update();
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Lift.java
             return false;
+=======
+            packet.addLine("Lift in tolerance?" + inTightTolerance());
+            return !inTightTolerance();
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/LiftAuto.java
         }
     }
 

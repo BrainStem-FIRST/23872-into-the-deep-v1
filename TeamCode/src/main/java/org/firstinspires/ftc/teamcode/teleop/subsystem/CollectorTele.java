@@ -4,17 +4,20 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
-import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 @Config
-public class Collector implements Component {
+public class CollectorTele implements ComponentTele {
     public static double currentThreshold = 7500, extakeExtraTime = 0.5, outtakePower = -0.40;
+    public static double CURRENT_THRESHOLD = 5000; // Current threshold in milliamps
+    public static int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
+    public static double COLLECT_POWER = 0.80; // Power for normal collection
+    public static double UNJAM_POWER = -0.50; // Power for unjamming (reverse direction)
+    public static double UNJAM_TIMEOUT = 0.25; // Timeout for resetting current counter (in seconds)
 
     Telemetry telemetry;
     HardwareMap hardwareMap;
@@ -24,7 +27,7 @@ public class Collector implements Component {
 
     public CollectorState collectorState;
 
-    public Collector(HardwareMap hardwareMap, Telemetry telemetry) {
+    public CollectorTele(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 
@@ -78,24 +81,35 @@ public class Collector implements Component {
         collectorMotor.setPower(0.0);
     }
     private void collectorIn() {
-        // checking for a current spike
-        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > currentThreshold) {
-            currentCounter += 1;
-            extakeExtraTimer.reset();
-            // resetting current count timer once pass a safety extake threshold
-        } else {
-            if(extakeExtraTimer.seconds() > extakeExtraTime)
-                currentCounter = 0;
+        // Define thresholds and constants (if not already defined globally)
 
-            // extaking once current has spike for a validated amount of frames
+
+        // Check for a current spike indicating a jam
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > CURRENT_THRESHOLD) {
+            currentCounter += 1; // Increment the jam counter
+            extakeExtraTimer.reset(); // Reset the unjam timer
+        } else {
+            // Reset the current counter if no jam is detected for the timeout period
+            if (extakeExtraTimer.seconds() > UNJAM_TIMEOUT) {
+                currentCounter = 0;
+            }
         }
-        if (currentCounter > 10) {
-            collectorMotor.setPower(outtakePower);
+
+        // If a jam is detected for the required number of frames, unjam the collector
+        if (currentCounter > JAM_FRAME_COUNT) {
+            collectorMotor.setPower(UNJAM_POWER); // Reverse the motor to unjam
+            telemetry.addData("Collector Status", "Unjamming Block");
+        } else {
+            // Otherwise, continue collecting
+            collectorMotor.setPower(COLLECT_POWER);
+            telemetry.addData("Collector Status", "Collecting");
         }
-        // collecting if there is no current spike
-        else {
-            collectorMotor.setPower(0.99);
-        }
+
+        // Add telemetry for debugging
+        telemetry.addData("Collector Current (mA)", collectorMotor.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("Current Counter", currentCounter);
+        telemetry.addData("Unjam Timer (s)", extakeExtraTimer.seconds());
+        telemetry.update();
     }
 
     private void collectorOut() {

@@ -17,9 +17,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 
 @Config
-public class Collector implements Component {
-    public static class Params {
+public class CollectorAuto implements ComponentAuto {
 
+    public static class Params {
+        public double ColorSensorDistance = 1.0 ;
+        public double maxAutoCollectTime = 3.0  ;
+        public double CURRENT_THRESHOLD = 3000; // Current threshold in milliamps
+        public int JAM_FRAME_COUNT = 5; // Number of consecutive frames to detect a jam
+        public double COLLECT_POWER = -0.80; // Power for normal collection
+        public double UNJAM_POWER = 0.50 + 0.25; // Power for unjamming (reverse direction)
+        public double UNJAM_TIMEOUT = 0.5 + 0.25; // Timeout for resetting current counter (in seconds)
     }
 
     Telemetry telemetry;
@@ -31,7 +38,7 @@ public class Collector implements Component {
     NormalizedColorSensor colorSensor;
     private int currentCounter = 0;
     private final ElapsedTime extakeExtraTimer = new ElapsedTime();
-    public Collector(HardwareMap hardwareMap, Telemetry telemetry) {
+    public CollectorAuto(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
 
@@ -89,10 +96,11 @@ public class Collector implements Component {
     }
 
     private void collectorOut() {
-        collectorMotor.setPower(1.0);
+        collectorMotor.setPower(0.6);
     }
 
     private void collectorIn() {
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Collector.java
         // checking for a current spike
         if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > 3000) {
             currentCounter += 1;
@@ -110,7 +118,37 @@ public class Collector implements Component {
         // collecting if there is no current spike
         else {
             collectorMotor.setPower(-0.99);
+=======
+        // Define thresholds and constants (if not already defined globally)
+
+
+        // Check for a current spike indicating a jam
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > PARAMS.CURRENT_THRESHOLD) {
+            currentCounter += 1; // Increment the jam counter
+            extakeExtraTimer.reset(); // Reset the unjam timer
+        } else {
+            // Reset the current counter if no jam is detected for the timeout period
+            if (extakeExtraTimer.seconds() > PARAMS.UNJAM_TIMEOUT) {
+                currentCounter = 0;
+            }
         }
+
+        // If a jam is detected for the required number of frames, unjam the collector
+        if (currentCounter > PARAMS.JAM_FRAME_COUNT) {
+            collectorMotor.setPower(PARAMS.UNJAM_POWER); // Reverse the motor to unjam
+            telemetry.addData("Collector Status", "Unjamming Block");
+        } else {
+            // Otherwise, continue collecting
+            collectorMotor.setPower(PARAMS.COLLECT_POWER);
+            telemetry.addData("Collector Status", "Collecting");
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/CollectorAuto.java
+        }
+
+        // Add telemetry for debugging
+        telemetry.addData("Collector Current (mA)", collectorMotor.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("Current Counter", currentCounter);
+        telemetry.addData("Unjam Timer (s)", extakeExtraTimer.seconds());
+        telemetry.update();
     }
 
     public void setIntake() {
@@ -150,7 +188,7 @@ public class Collector implements Component {
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
                 collectorState = CollectorState.LEVEL;
-                initialized = true;
+                initialized = false;
             }
 
             update();
@@ -168,13 +206,31 @@ public class Collector implements Component {
     }
 
     public class WaitForCollectionAction implements Action {
-
+        ElapsedTime timer = new ElapsedTime();
+        boolean first = true;
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Collector.java
             telemetry.addData("Color Distance", getDistance());
             telemetry.update();
+=======
+            if (first) {
+                timer.reset();
+                first = false;
+            }
 
-            return getDistance() > 3;
+            // Get the current distance from the color sensor
+            double distance = getDistance();
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/CollectorAuto.java
+
+            // Add telemetry for debugging
+            telemetry.addData("Color Sensor Distance", distance);
+            telemetry.update();
+
+      //      packet.put("is finished", distance > PARAMS.ColorSensorDistance && timer.seconds() < PARAMS.maxAutoCollectTime);
+
+            // Return true if the block is detected (distance <= 3)
+            return distance > PARAMS.ColorSensorDistance && timer.seconds() < PARAMS.maxAutoCollectTime;
         }
     }
 }

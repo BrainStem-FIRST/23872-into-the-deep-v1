@@ -1,22 +1,18 @@
 package org.firstinspires.ftc.teamcode.teleop.subsystem;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.subsystem.Lift;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 @Config
-public class Extension implements Component {
+public class ExtensionTele implements ComponentTele {
 
     // initialization
     private Telemetry telemetry;
@@ -27,23 +23,29 @@ public class Extension implements Component {
 
     public static class Params {
         // PIDS Values
+        public double fineTunePower = 0.75;
         public double kP_Up = 0.05;//FIXME
         public double kI_Up = 0.00; //FIXME
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/Extension.java
         public double FIND_BLOCK_POWER = 0.75;
 
         public int TOLERANCE = 5;
+=======
+        public int TOLERANCE = 10;
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/ExtensionTele.java
 
         public static final int EXTENSION_MAX = 500;
         public static final int EXTENSION_MIN = 0;
-        public int EXTENSION_CUSTOM = 10;
+        public int EXTENSION_CUSTOM = 30;
         public static final int RETRACT_POSITION = 0;
     }
 
     // some variables needed for class
     public int target = 0;
+
 
 
     private double power = 0;
@@ -56,11 +58,17 @@ public class Extension implements Component {
 
     // Constants
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/Extension.java
     public static Params PARAMS = new Params();
+=======
+    public static ExtensionTele.Params PARAMS = new ExtensionTele.Params();
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/ExtensionTele.java
 
+    private Gamepad gamepad1;
 
     // constructor for Extension class
-    public Extension(HardwareMap hwMap, Telemetry telemetry) {
+    public ExtensionTele(HardwareMap hwMap, Telemetry telemetry, Gamepad gamepad1) {
+        this.gamepad1 = gamepad1;
         extensionController = new PIDController(PARAMS.kP_Up, PARAMS.kI_Up, PARAMS.kD_Up);
         this.telemetry = telemetry;
         this.map = hwMap;
@@ -164,6 +172,7 @@ public class Extension implements Component {
                 break;
 
             case CUSTOM:
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/Extension.java
                 //setTarget(target);
                 //setMotorPower(getControlPower());
                 extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -172,6 +181,27 @@ public class Extension implements Component {
                 else
                     extension.setPower(targetFindBlockPower);
                 telemetry.addData("extension power", extension.getPower());
+=======
+                /*
+                if(target > extension.getCurrentPosition() + PARAMS.TOLERANCE)
+                    extension.setPower(PARAMS.fineTunePower);
+                else if(target < extension.getCurrentPosition() - PARAMS.TOLERANCE)
+                    extension.setPower(-PARAMS.fineTunePower);
+                else
+                    extension.setPower(0);
+
+                 */
+
+                if(gamepad1.dpad_up)
+                    extension.setPower(PARAMS.fineTunePower);
+                else if(gamepad1.dpad_down)
+                    extension.setPower(-PARAMS.fineTunePower);
+                else
+                    extension.setPower(0);
+
+                //setTarget(target);
+                //setMotorPower(getControlPower());
+>>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleop/subsystem/ExtensionTele.java
                 break;
         }
     }
