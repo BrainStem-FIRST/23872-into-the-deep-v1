@@ -18,7 +18,7 @@ public class LiftTele implements ComponentTele {
         public double liftKs = 0.0;
 
         public int BASE_HEIGHT = 25;
-        public int DECONFLICT_HEIGHT = 190;
+        public int DECONFLICT_HEIGHT = 220;
         public int GRAB_HEIGHT = 35;
         public int LOW_BASKET_HEIGHT = 650;
         public int HIGH_BASKET_HEIGHT = 1200;

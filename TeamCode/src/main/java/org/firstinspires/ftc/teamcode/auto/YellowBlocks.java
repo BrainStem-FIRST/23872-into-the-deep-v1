@@ -31,7 +31,7 @@ public class YellowBlocks extends LinearOpMode {
         Pose2d rightBlockPose = new Pose2d(-46.5, -44, Math.toRadians(90));
         Pose2d centerBlockPose = new Pose2d(-58.5, -43.5, Math.toRadians(89));
         Pose2d leftBlockPose = new Pose2d(-50.5, -32, Math.toRadians(155));
-        Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
+        Pose2d parkPose = new Pose2d(-17, -12, Math.toRadians(180));
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, beginPose);
         PinpointDrive drive = robot.drive;
@@ -152,7 +152,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
-                                        new SleepAction(1.0),
+                                        new SleepAction(2.0),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
@@ -191,7 +191,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
-                                    //    new SleepAction(2.5),
+                                        new SleepAction(1.0),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
