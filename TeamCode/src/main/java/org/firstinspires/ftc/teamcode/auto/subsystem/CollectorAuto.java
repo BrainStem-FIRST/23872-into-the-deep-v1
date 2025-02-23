@@ -25,8 +25,8 @@ public class CollectorAuto implements ComponentAuto {
         public double CURRENT_THRESHOLD = 3000; // Current threshold in milliamps
         public int JAM_FRAME_COUNT = 5; // Number of consecutive frames to detect a jam
         public double COLLECT_POWER = -0.80; // Power for normal collection
-        public double UNJAM_POWER = 0.50 + 0.25; // Power for unjamming (reverse direction)
-        public double UNJAM_TIMEOUT = 0.5 + 0.25; // Timeout for resetting current counter (in seconds)
+        public double UNJAM_POWER = 0.50; // Power for unjamming (reverse direction)
+        public double UNJAM_TIMEOUT = 0.5; // Timeout for resetting current counter (in seconds)
     }
 
     Telemetry telemetry;

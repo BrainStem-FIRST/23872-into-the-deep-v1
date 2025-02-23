@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenHighBa
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.GrabSpecimenSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.ResetLiftCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
+import org.firstinspires.ftc.teamcode.teleop.commands.depositorCommands.DepositorHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
 import org.firstinspires.ftc.teamcode.util.Drawing;
@@ -33,6 +34,7 @@ public class TeleOp extends LinearOpMode {
         resetLiftCommand = new ResetLiftCommand(robot, telemetry);
         timer = new ElapsedTime();
 
+        robot.depositor.setGripperOpen();
         waitForStart();
 
         while (opModeIsActive()) {
@@ -75,6 +77,7 @@ public class TeleOp extends LinearOpMode {
     private void driver2LiftControls(BrainSTEMRobot robot) {
         if (gamepad2.dpad_up) {
             new LiftHighBasketCommand(robot.lift, telemetry).schedule();
+            new DepositorHighBasketCommand(robot.depositor, telemetry).schedule();
         } else if (gamepad2.dpad_down) {
             new LiftLowBasketCommand(robot.lift, telemetry).schedule();
         }
