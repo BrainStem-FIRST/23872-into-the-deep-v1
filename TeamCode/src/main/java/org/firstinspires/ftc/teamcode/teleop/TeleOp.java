@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.teleop.commands.depositorCommands.DepositorHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.subsystem.Extension;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositGripSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositReleaseSequenceCommand;
@@ -37,6 +38,7 @@ public class TeleOp extends LinearOpMode {
         resetLiftCommand = new ResetLiftCommand(robot, telemetry);
         timer = new ElapsedTime();
 
+        robot.depositor.setGripperOpen();
         waitForStart();
 
         while (opModeIsActive()) {
@@ -85,6 +87,7 @@ public class TeleOp extends LinearOpMode {
     private void driver2LiftControls(BrainSTEMRobot robot) {
         if (gamepad2.dpad_up) {
             new LiftHighBasketCommand(robot.lift, telemetry).schedule();
+            new DepositorHighBasketCommand(robot.depositor, telemetry);
         } else if (gamepad2.dpad_down) {
             new LiftLowBasketCommand(robot.lift, telemetry).schedule();
         }
