@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftGrabSpeci
 
 public class DepositGripSequenceCommand extends SequentialCommandGroup {
     public DepositGripSequenceCommand(BrainSTEMRobot robot, Telemetry telemetry){
-        super( 
+        super(
                 new GripperOpenCommand(robot.depositor,telemetry),
                 new DepositorDownCommand(robot.depositor,telemetry),
                 new LiftGrabCommand(robot.lift,telemetry),

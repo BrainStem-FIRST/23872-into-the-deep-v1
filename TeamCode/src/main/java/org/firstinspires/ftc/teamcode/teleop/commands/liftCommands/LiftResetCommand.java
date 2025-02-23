@@ -4,17 +4,19 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.LiftTele;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
+
+import java.util.Timer;
 
 public class LiftResetCommand extends CommandBase {
-    LiftTele lift;
+    Lift lift;
     Telemetry telemetry;
     ElapsedTime timer = new ElapsedTime();
     boolean isFinished = false;
 
 
 
-    public LiftResetCommand(LiftTele lift, Telemetry telemetry) {
+    public LiftResetCommand(Lift lift, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.lift = lift;
     }

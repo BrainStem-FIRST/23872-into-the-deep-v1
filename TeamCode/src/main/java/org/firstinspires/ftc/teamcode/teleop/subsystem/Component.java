@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop.subsystem;
 
-public interface ComponentTele {
+public interface Component {
     void reset();
 
     void update();

@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.teleop.commands.liftCommands;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.LiftTele;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
 
 public class LiftLowBasketCommand extends CommandBase {
-    LiftTele lift;
+    Lift lift;
     Telemetry telemetry;
 
 
 
-    public LiftLowBasketCommand(LiftTele lift, Telemetry telemetry) {
+    public LiftLowBasketCommand(Lift lift, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.lift = lift;
     }

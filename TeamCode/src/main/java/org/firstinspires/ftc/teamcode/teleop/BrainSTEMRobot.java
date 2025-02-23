@@ -2,39 +2,38 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.CollectorTele;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.ComponentTele;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.DepositorTele;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.ExtensionTele;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.LiftTele;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Collector;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Component;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Depositor;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Extension;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
 
 import java.util.ArrayList;
 
 public class BrainSTEMRobot {
     Telemetry telemetry;
     HardwareMap map;
-    ArrayList<ComponentTele> subsystems;
-    public LiftTele lift;
-    public DepositorTele depositor;
-    public CollectorTele collector;
-    public ExtensionTele extension;
+    ArrayList<Component> subsystems;
+    public Lift lift;
+    public Depositor depositor;
+    public Collector collector;
+    public Extension extension;
 
     public PinpointDrive drive;
 
-    public BrainSTEMRobot(Telemetry telemetry, HardwareMap map, Gamepad gamepad1){
+    public BrainSTEMRobot(Telemetry telemetry, HardwareMap map){
         this.telemetry = telemetry;
         this.map = map;
 
         subsystems = new ArrayList<>();
-        lift = new LiftTele(map, telemetry);
-        depositor = new DepositorTele(map, telemetry);
-        collector = new CollectorTele(map, telemetry);
-        extension = new ExtensionTele(map, telemetry, gamepad1);
+        lift = new Lift(map, telemetry);
+        depositor = new Depositor(map, telemetry);
+        collector = new Collector(map, telemetry);
+        extension = new Extension(map, telemetry);
         drive = new PinpointDrive(map, new Pose2d(0,0,0));
 
         subsystems.add(lift);
@@ -44,10 +43,9 @@ public class BrainSTEMRobot {
     }
 
     public void update() {
-        for (ComponentTele c : subsystems) {
+        for (Component c : subsystems) {
             c.update();
         }
-        telemetry.update();
         drive.updatePoseEstimate();
         CommandScheduler.getInstance().run();
     }

@@ -4,16 +4,16 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.DepositorTele;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Depositor;
 
 public class DepositorBackCommand extends CommandBase {
-    DepositorTele depositor;
+    Depositor depositor;
     Telemetry telemetry;
     ElapsedTime timer = new ElapsedTime();
 
 
 
-    public DepositorBackCommand(DepositorTele depositor, Telemetry telemetry) {
+    public DepositorBackCommand(Depositor depositor, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.depositor = depositor;
     }
@@ -30,6 +30,6 @@ public class DepositorBackCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.milliseconds() > DepositorTele.Params.DEPOSITOR_BACK_TIME_MS;
+        return timer.milliseconds() > Depositor.Params.DEPOSITOR_BACK_TIME_MS;
     }
 }

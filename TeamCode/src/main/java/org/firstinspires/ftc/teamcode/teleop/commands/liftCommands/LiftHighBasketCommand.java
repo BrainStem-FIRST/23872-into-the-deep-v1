@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.teleop.commands.liftCommands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.teleop.subsystem.LiftTele;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
 
 public class LiftHighBasketCommand extends CommandBase {
-    LiftTele lift;
+    Lift lift;
     Telemetry telemetry;
 
 
 
-    public LiftHighBasketCommand(LiftTele lift, Telemetry telemetry) {
+    public LiftHighBasketCommand(Lift lift, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.lift = lift;
     }

@@ -16,8 +16,11 @@ import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenHighBa
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.GrabSpecimenSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.ResetLiftCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
+import org.firstinspires.ftc.teamcode.teleop.commands.gripperCommands.GripperOpenCommand;
+import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftGrabCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Lift;
 import org.firstinspires.ftc.teamcode.util.Drawing;
 
 public class TeleOp extends LinearOpMode {
@@ -30,7 +33,7 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, gamepad1);
+        BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap);
         resetLiftCommand = new ResetLiftCommand(robot, telemetry);
         timer = new ElapsedTime();
 
@@ -40,11 +43,7 @@ public class TeleOp extends LinearOpMode {
             robot.update();
             updateDrive(robot);
             updateDriver1(robot);
-<<<<<<< HEAD
             updateDriver2(robot);
-=======
-            telemetry.addData("lift state", robot.lift.liftState);
->>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6
             telemetry.update();
         }
     }

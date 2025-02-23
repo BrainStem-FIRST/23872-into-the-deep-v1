@@ -1,10 +1,6 @@
-package org.firstinspires.ftc.teamcode.auto.subsystem;
-
-import androidx.annotation.NonNull;
+package org.firstinspires.ftc.teamcode.teleop.subsystem;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -13,30 +9,27 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 @Config
-public class DepositorAuto implements ComponentAuto {
+public class Depositor implements Component {
     public static class Params {
         public double depositorForwardPosition = 0.85;
-        public double depositorBackwardPosition = 0.375;
+        public double depositorBackwardPosition = 0.275;
         public double depositorDownPosition = 0.075;
         public double depositorUpPosition = 0.65;
+        public double depositorHighBasket = 0.5;
         public double depositorNeutralPosition = 0.5;
         public double gripperClosedPosition = 0.99;
-        public double gripperOpenedPosition = 0.01;
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/Depositor.java
-        public double gripperLowerPWM = 500;
-        public double gripperUpperPWM = 2400;
-=======
-        public double gripperLowerPWM = 440;
-        public double gripperUpperPWM = 1220;
->>>>>>> e612d5cfa6f72653529460ae87c305fc8d7beac6:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/subsystem/DepositorAuto.java
+        public double gripperOpenedPosition = 0.075;
+        public double gripperLowerPWM = 400;
+        public double gripperUpperPWM = 1700;
 
         public final static int GRIPPER_OPEN_TIME_MS = 250;
-        public final static int GRIPPER_CLOSE_TIME_MS = 3000;
+        public final static int GRIPPER_CLOSE_TIME_MS = 250;
 
         public final static int DEPOSITOR_FORWARD_TIME_MS = 250;
         public final static int DEPOSITOR_BACK_TIME_MS = 250;
         public final static int DEPOSITOR_UP_TIME_MS = 400;
         public final static int DEPOSITOR_DOWN_TIME_MS = 400;
+        public final static int DEPOSITOR_HIGH_BASKET_TIME_MS = 400;
     }
 
     Telemetry telemetry;
@@ -49,14 +42,14 @@ public class DepositorAuto implements ComponentAuto {
     public DepositorState depositorState;
     public GripperState gripperState;
 
-    public DepositorAuto(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Depositor(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         rotationServo = new CachingServo(hardwareMap.get(ServoImplEx.class, "depositorRotationServo"));
         gripperServo = new CachingServo(hardwareMap.get(ServoImplEx.class, "gripperServo"));
         gripperServo.setPwmRange(new PwmControl.PwmRange(PARAMS.gripperLowerPWM, PARAMS.gripperUpperPWM));
-        depositorState = DepositorState.DEPOSITOR_UP;
-        gripperState = GripperState.GRIPPER_CLOSED;
+        depositorState = DepositorState.DEPOSITOR_DOWN;
+        gripperState = GripperState.GRIPPER_OPEN;
     }
 
     public enum GripperState {
@@ -69,7 +62,8 @@ public class DepositorAuto implements ComponentAuto {
         DEPOSITOR_BACKWARD,
         DEPOSITOR_NEUTRAL,
         DEPOSITOR_DOWN,
-        DEPOSITOR_UP
+        DEPOSITOR_UP,
+        DEPOSITOR_HIGH_BASKET,
     }
 
     @Override
@@ -115,6 +109,10 @@ public class DepositorAuto implements ComponentAuto {
             case DEPOSITOR_NEUTRAL:
                 moveDepositorNeutral();
                 break;
+
+            case DEPOSITOR_HIGH_BASKET:
+                moveDepositorHighBasket();
+                break;
         }
     }
 
@@ -128,7 +126,7 @@ public class DepositorAuto implements ComponentAuto {
         rotationServo.setPosition(PARAMS.depositorForwardPosition);
     }
 
-    public void moveDepositorBackward() {
+    private void moveDepositorBackward() {
         rotationServo.setPosition(PARAMS.depositorBackwardPosition);
     }
 
@@ -143,8 +141,16 @@ public class DepositorAuto implements ComponentAuto {
         rotationServo.setPosition(PARAMS.depositorNeutralPosition);
     }
 
+    private void moveDepositorHighBasket() {
+        rotationServo.setPosition(PARAMS.depositorHighBasket);
+    }
+
     public void setDepositorForward() {
         depositorState = DepositorState.DEPOSITOR_FORWARD;
+    }
+
+    public void setDepositorHighBasket() {
+        depositorState = DepositorState.DEPOSITOR_HIGH_BASKET;
     }
 
     public void setDepositorBackward() {
@@ -177,89 +183,5 @@ public class DepositorAuto implements ComponentAuto {
     public void setGripperOpen() {
         gripperState = GripperState.GRIPPER_OPEN;
     }
-
-    public class GotoBackward implements Action {
-        private boolean initialized = false;
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            setDepositorBackward();
-            update();
-
-            return false;
-        }
     }
-
-    public Action gotoBackward() {
-        return new GotoBackward();
-    }
-
-    public class GotoForward implements Action {
-        private boolean initialized = false;
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            setDepositorForward();
-            update();
-            return false;
-        }
-    }
-
-    public Action gotoForward() {
-        return new GotoForward();
-    }
-
-    public class GotoUp implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            setDepositorUp();
-            update();
-            return false;
-        }
-    }
-
-    public Action gotoUp() {
-        return new GotoUp();
-    }
-
-    public Action gotoDown() {
-        return new GotoDown();
-    }
-
-    public class GotoDown implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            setDepositorDown();
-            update();
-            return false;
-        }
-    }
-
-    public class OpenClaw implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            setGripperOpen();
-            update();
-            telemetry.addData("Gripper State", gripperState);
-            telemetry.update();
-
-            return false;
-        }
-    }
-
-    public Action openClaw() {
-        return new OpenClaw();
-    }
-
-    public class CloseClaw implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            setGripperClosed();
-            update();
-            return false;
-        }
-    }
-
-    public Action closeClaw() {
-        return new CloseClaw();
-    }
-}
 
