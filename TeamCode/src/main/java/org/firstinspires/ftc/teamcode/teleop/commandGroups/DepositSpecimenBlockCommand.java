@@ -30,7 +30,10 @@ public class DepositSpecimenBlockCommand extends SequentialCommandGroup {
                 new DepositorBackCommand(robot.depositor,telemetry),
                 new LiftGrabSpecimenCommand(robot.lift,telemetry),
                 new WaitCommand(250),
-                new GripperOpenCommand(robot.depositor,telemetry)
+                new GripperOpenCommand(robot.depositor,telemetry),
+                new LiftDeconflictCommand(robot.lift, telemetry),
+                new DepositorDownCommand(robot.depositor, telemetry),
+                new GripperOpenCommand(robot.depositor, telemetry)
         );
 
     }

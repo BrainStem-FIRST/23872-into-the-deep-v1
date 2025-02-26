@@ -27,7 +27,7 @@ public class YellowBlocks extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
-        Pose2d depositPose = new Pose2d(-60, -59, Math.toRadians(65));
+        Pose2d depositPose = new Pose2d(-59.5, -58.5, Math.toRadians(65));
         Pose2d rightBlockPose = new Pose2d(-46.5, -44, Math.toRadians(90));
         Pose2d centerBlockPose = new Pose2d(-58.5, -43.5, Math.toRadians(89));
         Pose2d leftBlockPose = new Pose2d(-50.5, -32, Math.toRadians(155));
@@ -93,7 +93,7 @@ public class YellowBlocks extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 robot.lift.gotoHighBasket(),
-                                new SleepAction(1.5),
+                                new SleepAction(1.0),
                                 robot.depositor.gotoUp(),
                                 depositPreloadApproach
                         ),
@@ -113,15 +113,16 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
-                                        new SleepAction(1.0),
+                                        new SleepAction(0.5),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
                                 )
                         ),
+                        robot.collector.waitForCollectionAction(),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
-                        robot.collector.collectorOffAction(),
+
 
 //                         DEPOSIT SEQUENCE
                         new SleepAction(0.5),
@@ -152,7 +153,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
-                                        new SleepAction(1.0),
+                                        new SleepAction(0.5),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
@@ -191,7 +192,7 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         new SleepAction(0.3),
                                         robot.collector.collectorInAction(),
-                                        new SleepAction(1.0),
+                                        new SleepAction(0.5),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()

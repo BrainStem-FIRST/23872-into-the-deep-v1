@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.util.CachingServo;
 public class DepositorTele implements ComponentTele {
     public static class Params {
         public double depositorForwardPosition = 0.85;
-        public double depositorBackwardPosition = 0.275;
+        public double depositorBackwardPosition = 0.350;
         public double depositorDownPosition = 0.075;
         public double depositorUpPosition = 0.65;
         public double depositorHighBasket = 0.5;

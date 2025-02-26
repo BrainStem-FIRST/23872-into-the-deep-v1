@@ -20,12 +20,12 @@ import org.firstinspires.ftc.teamcode.util.CachingMotor;
 public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
-        public double ColorSensorDistance = 1.0 ;
-        public double maxAutoCollectTime = 3.0  ;
+        public double ColorSensorDistance = 3.0 ;
+        public double maxAutoCollectTime = 1.0  ;
         public double CURRENT_THRESHOLD = 7500; // Current threshold in milliamps
         public int JAM_FRAME_COUNT = 1; // Number of consecutive frames to detect a jam
         public double COLLECT_POWER = -0.99; // Power for normal collection
-        public double UNJAM_POWER = 0.35; // Power for unjamming (reverse direction)
+        public double UNJAM_POWER = 0.45; // Power for unjamming (reverse direction)
         public double UNJAM_TIMEOUT = 3.0; // Timeout for resetting current counter (in seconds)
     }
 
