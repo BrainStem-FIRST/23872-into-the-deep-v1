@@ -27,7 +27,7 @@ public class ExtensionAuto implements ComponentAuto {
 
     public static class Params {
         // PIDS Values
-        public double kP_Up = 0.07;//FIXME
+        public double kP_Up = 0.05;//FIXME
         public double kI_Up = 0.01; //FIXME
         public double kD_Up = 0.000;//FIXME
         public double kS = 0;
@@ -39,9 +39,9 @@ public class ExtensionAuto implements ComponentAuto {
         public int EXTENSION_2ND_LEFT = 345;
         public int EXTENSION_2ND_CENTER = 340;
         public int EXTENSION_2ND_RIGHT = 360;
-        public int EXTENSION_LEFT_BLOCK = 600;
-        public int EXTENSION_CENTER_BLOCK = 520;
-        public int EXTENSION_RIGHT_BLOCK = 430 + 75;
+        public int EXTENSION_LEFT_BLOCK = 330;
+        public int EXTENSION_CENTER_BLOCK = 450;
+        public int EXTENSION_RIGHT_BLOCK = 430 + 20;
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static int RETRACT_POSITION = 0;
