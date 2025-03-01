@@ -26,7 +26,8 @@ public class LiftTele implements ComponentTele {
         public int LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT = 250;
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 800;
         public int HIGH_BAR_HEIGHT = 630;
-        public int HIGHBAR_PRE_HEIGHT = 450;
+        public int HIGH_BAR_RELEASE_HEIGHT = 545;
+        public int HIGHBAR_PRE_HEIGHT = 375;
         public int TOLERANCE = 30;
         public double MAX_POWER_UP = 0.2;
         public double MAX_POWER_DOWN = -0.25;
@@ -127,6 +128,7 @@ public class LiftTele implements ComponentTele {
                 break;
 
             case HIGH_BAR:
+                setTarget(PARAMS.HIGH_BAR_HEIGHT);
                 break;
 
             case HIGHBAR_PRE_HEIGHT:
@@ -136,7 +138,7 @@ public class LiftTele implements ComponentTele {
     }
 
     public boolean greaterHighBar() {
-        return liftMotor.getCurrentPosition() > PARAMS.HIGH_BAR_HEIGHT;
+        return liftMotor.getCurrentPosition() > PARAMS.HIGH_BAR_RELEASE_HEIGHT;
     }
 
     private double getControlPower() {
@@ -156,15 +158,7 @@ public class LiftTele implements ComponentTele {
     @Override
     public void update() {
         selectState();
-        double power;
-
-        if(liftState == LiftState.HIGH_BAR) {
-            power = 0.3;
-        } else {
-            power = getControlPower();
-        }
-
-        setMotorPower(power);
+        setMotorPower(getControlPower());
 
         telemetry.addData("liftController Target", liftController.getTarget());
         telemetry.addData("liftMotor Position", liftMotor.getCurrentPosition());
@@ -222,7 +216,6 @@ public class LiftTele implements ComponentTele {
 
     public void setHighBar() {
         liftState = liftState.HIGH_BAR;
-        setMotorPower(1.0);
     }
 
     public void setHighBarPreHeight(){ liftState = liftState.HIGHBAR_PRE_HEIGHT; }
