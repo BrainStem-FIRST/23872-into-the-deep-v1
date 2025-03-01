@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 public class LiftAuto implements ComponentAuto {
     public static class Params {
         ;
-        public double liftKp = 0.04;
+        public double liftKp = 0.035;
         public double liftKi = 0.015;
         public double liftKd = 0.0001;
 

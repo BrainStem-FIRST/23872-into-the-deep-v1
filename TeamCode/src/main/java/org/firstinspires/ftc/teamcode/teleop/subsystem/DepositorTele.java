@@ -20,7 +20,7 @@ public class DepositorTele implements ComponentTele {
         public double gripperClosedPosition = 0.99;
         public double gripperOpenedPosition = 0.065;
         public double gripperLowerPWM = 400;
-        public double gripperUpperPWM = 1700;
+        public double gripperUpperPWM = 1800;
 
         public final static int GRIPPER_OPEN_TIME_MS = 250;
         public final static int GRIPPER_CLOSE_TIME_MS = 250;
