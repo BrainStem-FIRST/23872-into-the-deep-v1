@@ -22,7 +22,7 @@ public class LiftAuto implements ComponentAuto {
 
         public int BASE_HEIGHT = 55;
         public int DECONFLICT_HEIGHT = 200;
-        public int GRAB_HEIGHT = 35;
+        public int GRAB_HEIGHT = 36;
         public int LOW_BASKET_HEIGHT = 600;
         public int HIGH_BASKET_HEIGHT = 900;
         public int SPECIMEN_LEVEL_HEIGHT = 80;
