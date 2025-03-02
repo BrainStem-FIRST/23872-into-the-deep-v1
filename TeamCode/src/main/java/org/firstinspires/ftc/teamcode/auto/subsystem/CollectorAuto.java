@@ -21,7 +21,7 @@ public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
         public double ColorSensorDistance = 3.0 ;
-        public double maxAutoCollectTime = 1.0  ;
+        public double maxAutoCollectTime = 1.5  ;
         public double CURRENT_THRESHOLD = 9000; // Current threshold in milliamps
         public int JAM_FRAME_COUNT = 1; // Number of consecutive frames to detect a jam
         public double COLLECT_POWER = -0.90; // Power for normal collection
@@ -196,26 +196,38 @@ public class CollectorAuto implements ComponentAuto {
     }
 
     public class WaitForCollectionAction implements Action {
-        ElapsedTime timer = new ElapsedTime();
-        boolean first = true;
+        private ElapsedTime timer = new ElapsedTime();
+        private boolean first = true;
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (first) {
-                timer.reset();
+                timer.reset(); // Reset the timer on the first run
                 first = false;
             }
 
-            // Get the current distance from the color sensor
+            // Get the current distance from the distance sensor
             double distance = getDistance();
 
             // Add telemetry for debugging
-            telemetry.addData("Color Sensor Distance", distance);
+            packet.put("Distance", distance); // Log distance in the telemetry packet
+            telemetry.addData("Distance to Block", distance);
             telemetry.update();
 
-      //      packet.put("is finished", distance > PARAMS.ColorSensorDistance && timer.seconds() < PARAMS.maxAutoCollectTime);
+            // Check if the block is detected (distance <= threshold)
+            boolean isBlockDetected = distance <= PARAMS.ColorSensorDistance;
 
-            // Return true if the block is detected (distance <= 3)
-            return distance > PARAMS.ColorSensorDistance && timer.seconds() < PARAMS.maxAutoCollectTime;
+            // Check if the max collection time has been exceeded
+            boolean isTimeout = timer.seconds() >= PARAMS.maxAutoCollectTime;
+
+            // Return true if the block is detected or the timeout is reached
+            return isBlockDetected || isTimeout;
+        }
+
+        // Placeholder method for getting distance from the sensor
+        private double getDistance() {
+            // Replace this with your actual distance sensor logic
+            return 0.0; // Example value
         }
     }
 }

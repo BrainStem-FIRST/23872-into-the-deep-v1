@@ -112,13 +112,14 @@ public class YellowBlocks extends LinearOpMode {
                                         new SleepAction(0.4),
                                         robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                         robot.collector.collectorInAction(),
+//                                        robot.collector.waitForCollectionAction(),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
                                 )
                         ),
-         //               robot.collector.waitForCollectionAction(),
+//                        robot.collector.waitForCollectionAction(),
                         robot.collector.collectorOffAction(),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
 
