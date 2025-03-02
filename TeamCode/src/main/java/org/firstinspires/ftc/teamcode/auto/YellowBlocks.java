@@ -33,7 +33,7 @@ public class YellowBlocks extends LinearOpMode {
         Pose2d depositPose = new Pose2d(-59, -59, Math.toRadians(65));
         Pose2d rightBlockPose = new Pose2d(-47, -44, Math.toRadians(90));
         Pose2d centerBlockPose = new Pose2d(-57, -43.5, Math.toRadians(89));
-        Pose2d leftBlockPose = new Pose2d(-52, -32, Math.toRadians(155));
+        Pose2d leftBlockPose = new Pose2d(-52, -33, Math.toRadians(155));
         Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, beginPose);
