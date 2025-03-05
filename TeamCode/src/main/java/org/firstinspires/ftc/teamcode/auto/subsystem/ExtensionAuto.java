@@ -40,8 +40,8 @@ public class ExtensionAuto implements ComponentAuto {
         public int EXTENSION_2ND_CENTER = 340;
         public int EXTENSION_2ND_RIGHT = 360;
         public int EXTENSION_LEFT_BLOCK = 400;
-        public int EXTENSION_CENTER_BLOCK = 450;
-        public int EXTENSION_RIGHT_BLOCK = 430 + 20;
+        public int EXTENSION_CENTER_BLOCK = 415;
+        public int EXTENSION_RIGHT_BLOCK = 410;
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static int RETRACT_POSITION = 0;

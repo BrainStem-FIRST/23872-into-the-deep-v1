@@ -164,7 +164,7 @@ public class CollectorAuto implements ComponentAuto {
 
             update();
 
-            return (timer.seconds() <= 2.25);
+            return (timer.seconds() <= 3);
         }
     }
 
