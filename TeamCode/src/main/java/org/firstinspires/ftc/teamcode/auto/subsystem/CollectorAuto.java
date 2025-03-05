@@ -21,7 +21,7 @@ public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
         public double ColorSensorDistance = 3.0 ;
-        public double maxAutoCollectTime = 1.5  ;
+        public double maxAutoCollectTime = 1.0  ;
         public double CURRENT_THRESHOLD = 9000; // Current threshold in milliamps
         public int JAM_FRAME_COUNT = 1; // Number of consecutive frames to detect a jam
         public double COLLECT_POWER = -0.90; // Power for normal collection

@@ -114,13 +114,12 @@ public class YellowBlocks extends LinearOpMode {
                                         robot.collector.collectorInAction(),
 //                                        robot.collector.waitForCollectionAction(),
                                         new ParallelAction(
+                                                robot.collector.collectorOffAction(),
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
                                 )
                         ),
-//                        robot.collector.waitForCollectionAction(),
-                        robot.collector.collectorOffAction(),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
 
 
@@ -153,13 +152,12 @@ public class YellowBlocks extends LinearOpMode {
                                         robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                         robot.collector.collectorInAction(),
                                         new ParallelAction(
+                                                robot.collector.collectorOffAction(),
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
                                 )
                         ),
-                        //               robot.collector.waitForCollectionAction(),
-                        robot.collector.collectorOffAction(),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
 
 //                         DEPOSIT SEQUENCE
@@ -192,13 +190,13 @@ public class YellowBlocks extends LinearOpMode {
                                 new SequentialAction(
                                         robot.collector.collectorInAction(),
                                         new ParallelAction(
+                                                robot.collector.collectorOffAction(),
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
                                 )
                         ),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
-                        robot.collector.collectorOffAction(),
 
 
                         // DEPOSIT SEQUENCE
