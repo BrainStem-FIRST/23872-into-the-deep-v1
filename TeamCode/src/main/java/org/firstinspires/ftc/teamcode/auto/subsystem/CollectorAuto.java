@@ -22,11 +22,11 @@ public class CollectorAuto implements ComponentAuto {
     public static class Params {
         public double ColorSensorDistance = 3.0 ;
         public double maxAutoCollectTime = 1.0  ;
-        public double CURRENT_THRESHOLD = 9000; // Current threshold in milliamps
+        public double CURRENT_THRESHOLD = 5250; // Current threshold in milliamps
         public int JAM_FRAME_COUNT = 1; // Number of consecutive frames to detect a jam
-        public double COLLECT_POWER = -0.90; // Power for normal collection
-        public double UNJAM_POWER = 0.25; // Power for unjamming (reverse direction)
-        public double UNJAM_TIMEOUT = 3.0; // Timeout for resetting current counter (in seconds)
+        public double COLLECT_POWER = -0.80; // Power for normal collection
+        public double UNJAM_POWER = 0.30; // Power for unjamming (reverse direction)
+        public double UNJAM_TIMEOUT = 0.2; // Timeout for resetting current counter (in seconds)
     }
 
     Telemetry telemetry;
@@ -114,9 +114,12 @@ public class CollectorAuto implements ComponentAuto {
 ////            }
 //            currentCounter = 0;
 //        }
-        if(collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) >= PARAMS.CURRENT_THRESHOLD){
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) >= PARAMS.CURRENT_THRESHOLD) {
             collectorMotor.setPower(PARAMS.UNJAM_POWER);
+            extakeExtraTimer.reset();
         }
+        else if(extakeExtraTimer.seconds() < PARAMS.UNJAM_TIMEOUT)
+            collectorMotor.setPower(PARAMS.UNJAM_POWER);
         else {
             collectorMotor.setPower(PARAMS.COLLECT_POWER);
         }

@@ -13,11 +13,11 @@ import org.firstinspires.ftc.teamcode.util.CachingMotor;
 @Config
 public class CollectorTele implements ComponentTele {
     public static double currentThreshold = 7500, extakeExtraTime = 0.5, outtakePower = -0.40;
-    public static double CURRENT_THRESHOLD = 8000; // Current threshold in milliamps
+    public static double CURRENT_THRESHOLD = 5250; // Current threshold in milliamps
     public static int JAM_FRAME_COUNT = 10; // Number of consecutive frames to detect a jam
     public static double COLLECT_POWER = 0.80; // Power for normal collection
     public static double UNJAM_POWER = -0.30; // Power for unjamming (reverse direction)
-    public static double UNJAM_TIMEOUT = 0.25; // Timeout for resetting current counter (in seconds)
+    public static double UNJAM_TIMEOUT = 0.2; // Timeout for resetting current counter (in seconds)
 
     Telemetry telemetry;
     HardwareMap hardwareMap;
@@ -85,25 +85,18 @@ public class CollectorTele implements ComponentTele {
 
 
         // Check for a current spike indicating a jam
-        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > CURRENT_THRESHOLD) {
-            currentCounter += 1; // Increment the jam counter
-            extakeExtraTimer.reset(); // Reset the unjam timer
-        } else {
-            // Reset the current counter if no jam is detected for the timeout period
-            if (extakeExtraTimer.seconds() > UNJAM_TIMEOUT) {
-                currentCounter = 0;
-            }
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) >= CURRENT_THRESHOLD) {
+        collectorMotor.setPower(UNJAM_POWER);
+            extakeExtraTimer.reset();
+        }
+        else if(extakeExtraTimer.seconds() < UNJAM_TIMEOUT)
+            collectorMotor.setPower(UNJAM_POWER);
+        else {
+            collectorMotor.setPower(COLLECT_POWER);
         }
 
         // If a jam is detected for the required number of frames, unjam the collector
-        if (currentCounter > JAM_FRAME_COUNT) {
-            collectorMotor.setPower(UNJAM_POWER); // Reverse the motor to unjam
-            telemetry.addData("Collector Status", "Unjamming Block");
-        } else {
-            // Otherwise, continue collecting
-            collectorMotor.setPower(COLLECT_POWER);
-            telemetry.addData("Collector Status", "Collecting");
-        }
+
 
         // Add telemetry for debugging
         telemetry.addData("Collector Current (mA)", collectorMotor.getCurrent(CurrentUnit.MILLIAMPS));

@@ -28,9 +28,9 @@ public class YellowBlocks extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
         Pose2d depositPose = new Pose2d(-59.5, -58.5, Math.toRadians(65));
-        Pose2d rightBlockPose = new Pose2d(-47.5, -43.5, Math.toRadians(90));
-        Pose2d centerBlockPose = new Pose2d(-57.5, -43.5, Math.toRadians(89));
-        Pose2d leftBlockPose = new Pose2d(-50.5, -25, Math.toRadians(175));
+        Pose2d rightBlockPose = new Pose2d(-46.5, -43.5, Math.toRadians(90));
+        Pose2d centerBlockPose = new Pose2d(-57, -43.5, Math.toRadians(89));
+        Pose2d leftBlockPose = new Pose2d(-50.5, -25, Math.toRadians(180));
         Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, beginPose);
@@ -109,11 +109,9 @@ public class YellowBlocks extends LinearOpMode {
                         new ParallelAction(
                                 rightBlock,
                                 new SequentialAction(
-                                        new SleepAction(0.4),
+                                        new SleepAction(0.5),
                                         robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                         robot.collector.collectorInAction(),
-                                        robot.collector.collectorOffAction(),
-                                        robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
@@ -121,25 +119,28 @@ public class YellowBlocks extends LinearOpMode {
                                 )
                         ),
 
+                        robot.collector.collectorOffAction(),
+                        robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
+
 
 //                         DEPOSIT SEQUENCE
-                        new SleepAction(0.15),
+                        new SleepAction(0.35),
                         robot.lift.goToGrabFast(),
                         new SleepAction(0.1),
                         robot.depositor.closeClaw(),
                         new SleepAction(0.25),
                         robot.lift.gotoDeconflict(),
                         robot.depositor.gotoUp(),
-                        new SleepAction(0.2),
+                        new SleepAction(0.15),
                         robot.lift.gotoHighBasket(),
                         depositRightBlock,
                         new SleepAction(0.1),
 
                         // RETRACT SEQUENCE
                         robot.depositor.gotoBackward(),
-                        new SleepAction(0.1),
+                        new SleepAction(0.15),
                         robot.depositor.openClaw(),
-                        new SleepAction(0.25),
+                        new SleepAction(0.2),
                         robot.depositor.gotoUp(),
 
                         // CENTER BLOCK
@@ -147,7 +148,7 @@ public class YellowBlocks extends LinearOpMode {
                         new ParallelAction(
                                 centerBlock,
                                 new SequentialAction(
-                                        new SleepAction(0.3),
+                                        new SleepAction(0.5),
                                         robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                         robot.collector.collectorInAction(),
                                         new ParallelAction(
@@ -156,7 +157,7 @@ public class YellowBlocks extends LinearOpMode {
                                         )
                                 )
                         ),
-                        //               robot.collector.waitForCollectionAction(),
+
                         robot.collector.collectorOffAction(),
                         robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
 
@@ -168,16 +169,16 @@ public class YellowBlocks extends LinearOpMode {
                         new SleepAction(0.25),
                         robot.lift.gotoDeconflict(),
                         robot.depositor.gotoUp(),
-                        new SleepAction(0.2),
+                        new SleepAction(0.15),
                         robot.lift.gotoHighBasket(),
                         depositCenterBlock,
                         new SleepAction(0.1),
 
                         // RETRACT SEQUENCE
                         robot.depositor.gotoBackward(),
-                        new SleepAction(0.1),
+                        new SleepAction(0.15),
                         robot.depositor.openClaw(),
-                        new SleepAction(0.25),
+                        new SleepAction(0.2),
                         robot.depositor.gotoUp(),
 
                         // LEFT BLOCK
@@ -185,12 +186,10 @@ public class YellowBlocks extends LinearOpMode {
                         // COLLECT SEQUENCE
                         new ParallelAction(
                                 leftBlock,
-                                new SleepAction(1.5),
-                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                 new SequentialAction(
+                                        new SleepAction(0.65),
+                                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                         robot.collector.collectorInAction(),
-                                        robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
-                                        robot.collector.collectorOffAction(),
                                         new ParallelAction(
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
@@ -198,9 +197,12 @@ public class YellowBlocks extends LinearOpMode {
                                 )
                         ),
 
+                        robot.collector.collectorOffAction(),
+                        robot.extension.goToPosition(0, ExtensionAuto.PARAMS.TOLERANCE),
+
 
                         // DEPOSIT SEQUENCE
-                        new SleepAction(0.15),
+                        new SleepAction(0.35),
                         robot.lift.goToGrabFast(),
                         new SleepAction(0.1),
                         robot.depositor.closeClaw(),
@@ -215,9 +217,9 @@ public class YellowBlocks extends LinearOpMode {
 
                         // RETRACT SEQUENCE
                         robot.depositor.gotoBackward(),
-                        new SleepAction(0.2),
+                        new SleepAction(0.15),
                         robot.depositor.openClaw(),
-                        new SleepAction(0.25),
+                        new SleepAction(0.2),
                         robot.depositor.gotoUp(),
                         park,
 
