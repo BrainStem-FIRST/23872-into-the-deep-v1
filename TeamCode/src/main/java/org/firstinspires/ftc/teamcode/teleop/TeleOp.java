@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
@@ -20,11 +21,14 @@ import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBaske
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
 import org.firstinspires.ftc.teamcode.util.Drawing;
 
+@Config
 public class TeleOp extends LinearOpMode {
+    public static double MOVE_HANG_UP_POWER = 1, MOVE_HANG_DOWN_POWER = -1, HOLD_HANG_POWER = -0.1;
     ResetLiftCommand resetLiftCommand;
     ElapsedTime timer;
     boolean liftResetInProgress = false;
     boolean extensionResetInProgress = false;
+    int hangState = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,7 +45,11 @@ public class TeleOp extends LinearOpMode {
             robot.update();
             updateDrive(robot);
             updateDriver1(robot);
+
+            telemetry.addData("hang state", hangState);
+            telemetry.addData("hang motor power", robot.hangMotor.getPower());
             telemetry.addData("lift state", robot.lift.liftState);
+            telemetry.addData("Hang Encoder", robot.hangMotor.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -53,6 +61,7 @@ public class TeleOp extends LinearOpMode {
         driver1CollectorControls(robot);
         driver1ExtensionControls(robot);
         driver2DepositorControls(robot);
+        driver2HangControls(robot);
     }
 
     private void driver1ExtensionControls(BrainSTEMRobot robot) {
@@ -127,6 +136,14 @@ public class TeleOp extends LinearOpMode {
         }
     }
 
+    private void driver2HangControls(BrainSTEMRobot robot) {
+        if (gamepad2.dpad_right)
+            robot.hangMotor.setPower(MOVE_HANG_UP_POWER);
+        else if (gamepad2.dpad_left)
+            robot.hangMotor.setPower(MOVE_HANG_DOWN_POWER);
+        else
+            robot.hangMotor.setPower(0);
+    }
     private void updateDriver2(BrainSTEMRobot robot) {
     }
 

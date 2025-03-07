@@ -32,6 +32,7 @@ public class LiftTele implements ComponentTele {
         public double MAX_POWER_UP = 0.2;
         public double MAX_POWER_DOWN = -0.25;
         public long RESET_TIME = 500;
+        public double hangKp;
     }
 
     PIDController liftController;

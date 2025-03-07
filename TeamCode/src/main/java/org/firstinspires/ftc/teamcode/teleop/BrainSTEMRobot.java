@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -23,7 +25,7 @@ public class BrainSTEMRobot {
     public DepositorTele depositor;
     public CollectorTele collector;
     public ExtensionTele extension;
-
+    public final DcMotorEx hangMotor;
     public PinpointDrive drive;
 
     public BrainSTEMRobot(Telemetry telemetry, HardwareMap map, Gamepad gamepad1){
@@ -36,6 +38,9 @@ public class BrainSTEMRobot {
         collector = new CollectorTele(map, telemetry);
         extension = new ExtensionTele(map, telemetry, gamepad1);
         drive = new PinpointDrive(map, new Pose2d(0,0,0));
+        hangMotor = map.get(DcMotorEx.class, "HangMotor");
+        hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         subsystems.add(lift);
         subsystems.add(depositor);

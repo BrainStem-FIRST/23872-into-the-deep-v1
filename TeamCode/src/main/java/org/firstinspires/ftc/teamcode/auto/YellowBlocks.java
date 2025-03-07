@@ -26,12 +26,12 @@ public class YellowBlocks extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        Pose2d beginPose = new Pose2d(-39, -64, Math.toRadians(0));
-        Pose2d depositPose = new Pose2d(-59.5, -58.5, Math.toRadians(65));
-        Pose2d rightBlockPose = new Pose2d(-46.5, -43.5, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d(-38, -64, Math.toRadians(0));
+        Pose2d depositPose = new Pose2d(-60, -59, Math.toRadians(65));
+        Pose2d rightBlockPose = new Pose2d(-46.5, -41.5, Math.toRadians(90));
         Pose2d centerBlockPose = new Pose2d(-57, -43.5, Math.toRadians(89));
         Pose2d leftBlockPose = new Pose2d(-50.5, -25, Math.toRadians(180));
-        Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
+        Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(180));
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, beginPose);
         PinpointDrive drive = robot.drive;
@@ -91,11 +91,13 @@ public class YellowBlocks extends LinearOpMode {
                         robot.depositor.closeClaw(),
                         new SleepAction(0.4),
                         new ParallelAction(
+                                robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_2ND_RIGHT, ExtensionAuto.PARAMS.TOLERANCE),
                                 robot.lift.gotoHighBasket(),
                                 new SleepAction(1.0),
                                 robot.depositor.gotoUp(),
                                 depositPreloadApproach
                         ),
+                        new SleepAction(0.5),
                         robot.depositor.gotoBackward(),
                         new SleepAction(0.2),
                         robot.depositor.openClaw(),
@@ -109,7 +111,7 @@ public class YellowBlocks extends LinearOpMode {
                         new ParallelAction(
                                 rightBlock,
                                 new SequentialAction(
-                                        new SleepAction(0.5),
+                                        new SleepAction(0.35),
                                         robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
                                         robot.collector.collectorInAction(),
                                         new ParallelAction(
@@ -221,7 +223,10 @@ public class YellowBlocks extends LinearOpMode {
                         robot.depositor.openClaw(),
                         new SleepAction(0.2),
                         robot.depositor.gotoUp(),
-                        park,
+                        new ParallelAction(
+                                park,
+                                robot.moveHangToPark()
+                        ),
 
                         // PARK
                         new ParallelAction(
