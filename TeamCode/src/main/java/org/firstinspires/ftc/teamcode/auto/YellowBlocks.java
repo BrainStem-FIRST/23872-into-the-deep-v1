@@ -24,16 +24,16 @@ import org.firstinspires.ftc.teamcode.drivetrain.PinpointDrive;
 @Config
 @Autonomous(name="Yellow Blocks", group="Hippos")
 public class YellowBlocks extends LinearOpMode {
-    public static double drivePathSpeedConstraint = 30;
+    public static double drivePathSpeedConstraint = 50;
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Pose2d beginPose = new Pose2d(-38, -64, Math.toRadians(0));
         Pose2d depositPose = new Pose2d(-60, -59, Math.toRadians(65));
-        Pose2d rightBlockPose = new Pose2d(-46, -43, Math.toRadians(91.5));
-        Pose2d centerBlockPose = new Pose2d(-57, -43.5, Math.toRadians(89));
-        Pose2d leftBlockPose = new Pose2d(-50.5, -25, Math.toRadians(180));
-        Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(180));
+        Pose2d rightBlockPose = new Pose2d(-45.5, -43.8, Math.toRadians(89));
+        Pose2d centerBlockPose = new Pose2d(-56.5, -43.5, Math.toRadians(89));
+        Pose2d leftBlockPose = new Pose2d(-48.5, -25, Math.toRadians(180));
+        Pose2d parkPose = new Pose2d(-20, -12, Math.toRadians(0));
 
         BrainSTEMRobot robot = new BrainSTEMRobot(telemetry, hardwareMap, beginPose);
         PinpointDrive drive = robot.drive;
@@ -114,14 +114,17 @@ public class YellowBlocks extends LinearOpMode {
                                 rightBlock,
                                 new SequentialAction(
                                         new SleepAction(0.5),
-                                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
-                                        robot.collector.collectorInAction(),
-//                                        robot.collector.waitForCollectionAction(robot),
                                         new ParallelAction(
-                                                new SleepAction(0.5),
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
+                                ),
+
+                                new SequentialAction(
+                                        new SleepAction(0.65),
+                                        robot.collector.collectorInAction(),
+                                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_RIGHT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
+                                        robot.collector.waitForCollectionAction(robot)
                                 )
                         ),
 
@@ -158,14 +161,17 @@ public class YellowBlocks extends LinearOpMode {
                                 centerBlock,
                                 new SequentialAction(
                                         new SleepAction(0.5),
-                                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
-                                        robot.collector.collectorInAction(),
-//                                        robot.collector.waitForCollectionAction(robot),
                                         new ParallelAction(
-                                                new SleepAction(0.5),
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
+                                ),
+
+                                new SequentialAction(
+                                        new SleepAction(0.65),
+                                        robot.collector.collectorInAction(),
+                                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_CENTER_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
+                                        robot.collector.waitForCollectionAction(robot)
                                 )
                         ),
 
@@ -198,15 +204,18 @@ public class YellowBlocks extends LinearOpMode {
                         new ParallelAction(
                                 leftBlock,
                                 new SequentialAction(
-                                        new SleepAction(0.65),
-                                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
-                                        robot.collector.collectorInAction(),
-//                                        robot.collector.waitForCollectionAction(robot),
+                                        new SleepAction(0.5),
                                         new ParallelAction(
-                                                new SleepAction(0.5),
                                                 robot.lift.gotoDeconflict(),
                                                 robot.depositor.gotoDown()
                                         )
+                                ),
+
+                                new SequentialAction(
+                                        new SleepAction(0.9),
+                                        robot.collector.collectorInAction(),
+                                        robot.extension.goToPosition(ExtensionAuto.PARAMS.EXTENSION_LEFT_BLOCK, ExtensionAuto.PARAMS.TOLERANCE),
+                                        robot.collector.waitForCollectionAction(robot)
                                 )
                         ),
 

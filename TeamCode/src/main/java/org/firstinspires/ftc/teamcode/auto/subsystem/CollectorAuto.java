@@ -23,11 +23,11 @@ public class CollectorAuto implements ComponentAuto {
     public static class Params {
         public double ColorSensorDistance = 5.0 ;
         public double maxAutoCollectTime = 1.5  ;
-        public double CURRENT_THRESHOLD = 5250; // Current threshold in milliamps
+        public double CURRENT_THRESHOLD = 9000; // Current threshold in milliamps
         public int JAM_FRAME_COUNT = 1; // Number of consecutive frames to detect a jam
-        public double COLLECT_POWER = -0.65; // Power for normal collection
-        public double UNJAM_POWER = 0.25; // Power for unjamming (reverse direction)
-        public double UNJAM_TIMEOUT = 0.2; // Timeout for resetting current counter (in seconds)
+        public double COLLECT_POWER = -0.8; // Power for normal collection
+        public double UNJAM_POWER = 0.5; // Power for unjamming (reverse direction)
+        public double UNJAM_TIMEOUT = 0.2;// Timeout for resetting current counter (in seconds)
     }
 
     Telemetry telemetry;
@@ -38,6 +38,7 @@ public class CollectorAuto implements ComponentAuto {
     public CollectorState collectorState;
     NormalizedColorSensor colorSensor;
     private int currentCounter = 0;
+    private int unJamCounter = 0;
     private final ElapsedTime extakeExtraTimer = new ElapsedTime();
 
     BrainSTEMRobot robot;
@@ -107,24 +108,28 @@ public class CollectorAuto implements ComponentAuto {
         //collectorMotor.setPower(-0.6);
         // Define thresholds and constants (if not already defined globally)
         // Check for a current spike indicating a jam
-//        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > PARAMS.CURRENT_THRESHOLD) {
-//            currentCounter += 1; // Increment the jam counter
+        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) > PARAMS.CURRENT_THRESHOLD) {
+            currentCounter += 1; // Increment the jam counter
 //            extakeExtraTimer.reset(); // Reset the unjam timer
-//        } else {
+        }
 //            // Reset the current counter if no jam is detected for the timeout period
 ////            if (extakeExtraTimer.seconds() > PARAMS.UNJAM_TIMEOUT) {
 ////                currentCounter = 0;
 ////            }
 //            currentCounter = 0;
 //        }
-        if (collectorMotor.getCurrent(CurrentUnit.MILLIAMPS) >= PARAMS.CURRENT_THRESHOLD) {
+        if (currentCounter > 10) {
             collectorMotor.setPower(PARAMS.UNJAM_POWER);
-            extakeExtraTimer.reset();
+            unJamCounter = 0;
+//            extakeExtraTimer.reset();
         }
-        else if(extakeExtraTimer.seconds() < PARAMS.UNJAM_TIMEOUT)
-            collectorMotor.setPower(PARAMS.UNJAM_POWER);
-        else {
+//        else if(extakeExtraTimer.seconds() < PARAMS.UNJAM_TIMEOUT)
+//            collectorMotor.setPower(PARAMS.UNJAM_POWER);
+        else if (unJamCounter > 10) {
+            currentCounter = 0;
             collectorMotor.setPower(PARAMS.COLLECT_POWER);
+        } else {
+            unJamCounter += 1;
         }
 
         // If a jam is detected for the required number of frames, unjam the collector
