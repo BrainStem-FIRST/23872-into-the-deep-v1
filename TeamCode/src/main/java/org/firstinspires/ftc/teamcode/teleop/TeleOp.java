@@ -28,7 +28,7 @@ public class TeleOp extends LinearOpMode {
     ElapsedTime timer;
     boolean liftResetInProgress = false;
     boolean extensionResetInProgress = false;
-    int hangState = 0;
+//    int hangState = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,7 +46,7 @@ public class TeleOp extends LinearOpMode {
             updateDrive(robot);
             updateDriver1(robot);
 
-            telemetry.addData("hang state", hangState);
+//            telemetry.addData("hang state", hangState);
 //            telemetry.addData("hang motor power", robot.hangMotor.getPower());
             telemetry.addData("lift state", robot.lift.liftState);
 //            telemetry.addData("Hang Encoder", robot.hangMotor.getCurrentPosition());
