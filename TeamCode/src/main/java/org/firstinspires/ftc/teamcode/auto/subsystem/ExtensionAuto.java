@@ -37,11 +37,11 @@ public class ExtensionAuto implements ComponentAuto {
         public int EXTENSION_MAX = 600;
 
         public int EXTENSION_2ND_LEFT = 345;
-        public int EXTENSION_2ND_CENTER = 340;
-        public int EXTENSION_2ND_RIGHT = 350;
-        public int EXTENSION_LEFT_BLOCK = 340;
-        public int EXTENSION_CENTER_BLOCK = 415;
-        public int EXTENSION_RIGHT_BLOCK = 420;
+        public int EXTENSION_2ND_CENTER = 250;
+        public int EXTENSION_2ND_RIGHT = 250;
+        public int EXTENSION_LEFT_BLOCK = 345;
+        public int EXTENSION_CENTER_BLOCK = 390;
+        public int EXTENSION_RIGHT_BLOCK = 365;
         public int EXTENSION_MIN = 0;
         public int EXTENSION_CUSTOM = 10;
         public static int RETRACT_POSITION = 0;
@@ -167,10 +167,18 @@ public class ExtensionAuto implements ComponentAuto {
             case CUSTOM:
                 setTarget(target);
                 extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                setMotorPower(1.0);
+                setMotorPower(0.8);
                 ;
                 break;
         }
+    }
+
+    public void searchOut() {
+        setTarget(target + 35);
+    }
+
+    public void searchIn() {
+        setTarget(target - 35);
     }
 
 

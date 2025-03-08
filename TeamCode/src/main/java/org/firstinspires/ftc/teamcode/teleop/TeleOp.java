@@ -47,9 +47,9 @@ public class TeleOp extends LinearOpMode {
             updateDriver1(robot);
 
             telemetry.addData("hang state", hangState);
-            telemetry.addData("hang motor power", robot.hangMotor.getPower());
+//            telemetry.addData("hang motor power", robot.hangMotor.getPower());
             telemetry.addData("lift state", robot.lift.liftState);
-            telemetry.addData("Hang Encoder", robot.hangMotor.getCurrentPosition());
+//            telemetry.addData("Hang Encoder", robot.hangMotor.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -61,7 +61,7 @@ public class TeleOp extends LinearOpMode {
         driver1CollectorControls(robot);
         driver1ExtensionControls(robot);
         driver2DepositorControls(robot);
-        driver2HangControls(robot);
+//        driver2HangControls(robot);
     }
 
     private void driver1ExtensionControls(BrainSTEMRobot robot) {
@@ -136,14 +136,14 @@ public class TeleOp extends LinearOpMode {
         }
     }
 
-    private void driver2HangControls(BrainSTEMRobot robot) {
-        if (gamepad2.dpad_right)
-            robot.hangMotor.setPower(MOVE_HANG_UP_POWER);
-        else if (gamepad2.dpad_left)
-            robot.hangMotor.setPower(MOVE_HANG_DOWN_POWER);
-        else
-            robot.hangMotor.setPower(0);
-    }
+//    private void driver2HangControls(BrainSTEMRobot robot) {
+//        if (gamepad2.dpad_right)
+//            robot.hangMotor.setPower(MOVE_HANG_UP_POWER);
+//        else if (gamepad2.dpad_left)
+//            robot.hangMotor.setPower(MOVE_HANG_DOWN_POWER);
+//        else
+//            robot.hangMotor.setPower(0);
+//    }
     private void updateDriver2(BrainSTEMRobot robot) {
     }
 

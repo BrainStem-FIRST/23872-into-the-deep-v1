@@ -260,6 +260,13 @@ public class MecanumDrive {
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
     }
 
+    public void setRawPower(double leftPower, double rightPower) {
+        leftFront.setPower(leftPower);
+        leftBack.setPower(leftPower);
+        rightBack.setPower(rightPower);
+        rightFront.setPower(rightPower);
+    }
+
     public final class FollowTrajectoryAction implements Action {
         public final TimeTrajectory timeTrajectory;
         private double beginTs = -1;

@@ -36,8 +36,7 @@ public class BrainSTEMRobot {
     public PinpointDrive drive;
 
 
-
-    public BrainSTEMRobot(Telemetry telemetry, HardwareMap map, Pose2d pose){
+    public BrainSTEMRobot(Telemetry telemetry, HardwareMap map, Pose2d pose) {
         this.telemetry = telemetry;
         this.map = map;
 
@@ -47,10 +46,10 @@ public class BrainSTEMRobot {
         collector = new CollectorAuto(map, telemetry);
         extension = new ExtensionAuto(map, telemetry);
         drive = new PinpointDrive(map, pose);
-        hangMotor = map.get(DcMotorEx.class, "HangMotor");
-        hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangMotor.setTargetPosition(hangMotor.getCurrentPosition());
-        hangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        hangMotor = map.get(DcMotorEx.class, "HangMotor");
+//        hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        hangMotor.setTargetPosition(hangMotor.getCurrentPosition());
+//        hangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         subsystems.add(lift);
         subsystems.add(depositor);
@@ -67,14 +66,14 @@ public class BrainSTEMRobot {
         CommandScheduler.getInstance().run();
     }
 
-    public Action moveHangToPark() {
-        return new Action() {
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                hangMotor.setTargetPosition(HANG_PARK_ENCODER);
-                return Math.abs(hangMotor.getCurrentPosition() - HANG_PARK_ENCODER) > HANG_PARK_TOLERANCE;
-            }
-        };
-    }
-
+//    public Action moveHangToPark() {
+//        return new Action() {
+//            @Override
+//            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//                hangMotor.setTargetPosition(HANG_PARK_ENCODER);
+//                return Math.abs(hangMotor.getCurrentPosition() - HANG_PARK_ENCODER) > HANG_PARK_TOLERANCE;
+//            }
+//        };
+//    }
+//
 }

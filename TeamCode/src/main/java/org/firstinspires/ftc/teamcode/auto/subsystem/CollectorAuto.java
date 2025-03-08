@@ -14,18 +14,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.auto.BrainSTEMRobot;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 
 @Config
 public class CollectorAuto implements ComponentAuto {
 
     public static class Params {
-        public double ColorSensorDistance = 3.0 ;
-        public double maxAutoCollectTime = 1.0  ;
+        public double ColorSensorDistance = 5.0 ;
+        public double maxAutoCollectTime = 1.5  ;
         public double CURRENT_THRESHOLD = 5250; // Current threshold in milliamps
         public int JAM_FRAME_COUNT = 1; // Number of consecutive frames to detect a jam
-        public double COLLECT_POWER = -0.80; // Power for normal collection
-        public double UNJAM_POWER = 0.20; // Power for unjamming (reverse direction)
+        public double COLLECT_POWER = -0.65; // Power for normal collection
+        public double UNJAM_POWER = 0.25; // Power for unjamming (reverse direction)
         public double UNJAM_TIMEOUT = 0.2; // Timeout for resetting current counter (in seconds)
     }
 
@@ -38,6 +39,8 @@ public class CollectorAuto implements ComponentAuto {
     NormalizedColorSensor colorSensor;
     private int currentCounter = 0;
     private final ElapsedTime extakeExtraTimer = new ElapsedTime();
+
+    BrainSTEMRobot robot;
     public CollectorAuto(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
@@ -194,13 +197,18 @@ public class CollectorAuto implements ComponentAuto {
         return new CollectorOff();
     }
 
-    public Action waitForCollectionAction() {
+    public Action waitForCollectionAction(BrainSTEMRobot robot) {
+        this.robot = robot;
         return new WaitForCollectionAction();
     }
 
     public class WaitForCollectionAction implements Action {
         private ElapsedTime timer = new ElapsedTime();
         private boolean first = true;
+        private double distance = 15.0;
+        boolean isNoBlockDetected = false;
+        boolean isNoTimeout = false;
+        boolean isRunning = true;
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -210,7 +218,7 @@ public class CollectorAuto implements ComponentAuto {
             }
 
             // Get the current distance from the distance sensor
-            double distance = getDistance();
+            distance = ((DistanceSensor) colorSensor).getDistance(DistanceUnit.CM);
 
             // Add telemetry for debugging
             packet.put("Distance", distance); // Log distance in the telemetry packet
@@ -218,19 +226,47 @@ public class CollectorAuto implements ComponentAuto {
             telemetry.update();
 
             // Check if the block is detected (distance <= threshold)
-            boolean isBlockDetected = distance <= PARAMS.ColorSensorDistance;
+            isNoBlockDetected = distance >= PARAMS.ColorSensorDistance;
 
             // Check if the max collection time has been exceeded
-            boolean isTimeout = timer.seconds() >= PARAMS.maxAutoCollectTime;
+            isNoTimeout = timer.seconds() <= PARAMS.maxAutoCollectTime;
+
+            isRunning = (isNoBlockDetected && isNoTimeout);
+
+//            if (!isRunning) {
+//                robot.drive.setRawPower(0,0);
+//            } else {
+//                if (timer.seconds() < 0.5) {
+//                    robot.drive.setRawPower(-0.1, 0.1);
+//                } else if (timer.seconds() < 1) {
+//                    robot.drive.setRawPower(0.1, -0.1);
+//                } else if (timer.seconds() < 1.5) {
+//                    robot.drive.setRawPower(-0.125, 0.125);
+//                } else if (timer.seconds() < 2.0) {
+//                    robot.drive.setRawPower(0.15, -0.15);
+//                } else if (timer.seconds() < 2.5) {
+//                    robot.drive.setRawPower(-0.175, 0.175);
+//                } else {
+//                    robot.drive.setRawPower(0.175, -0.175);
+//                }
+//
+//                if (timer.seconds() < 0.5) {
+//                    robot.extension.searchOut();
+//                } else if (timer.seconds() < 1.0) {
+//                    robot.extension.searchIn();
+//                } else if (timer.seconds() < 1.5) {
+//                    robot.extension.searchOut();
+//                } else if (timer.seconds() < 2.0) {
+//                    robot.extension.searchIn();
+//                } else if (timer.seconds() < 2.5) {
+//                    robot.extension.searchOut();
+//                } else {
+//                    robot.extension.searchIn();
+//                }
+//            }
 
             // Return true if the block is detected or the timeout is reached
-            return isBlockDetected || isTimeout;
-        }
-
-        // Placeholder method for getting distance from the sensor
-        private double getDistance() {
-            // Replace this with your actual distance sensor logic
-            return 0.0; // Example value
+            return isRunning;
         }
     }
 }
