@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.teleop.commandGroups.DepositSpecimenHighBa
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.GrabSpecimenSequenceCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.ResetLiftCommand;
 import org.firstinspires.ftc.teamcode.teleop.commandGroups.SpecimenPreDeposit;
+import org.firstinspires.ftc.teamcode.teleop.commands.depositorCommands.DepositorBackCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.depositorCommands.DepositorHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftHighBasketCommand;
 import org.firstinspires.ftc.teamcode.teleop.commands.liftCommands.LiftLowBasketCommand;
@@ -91,6 +92,7 @@ public class TeleOp extends LinearOpMode {
             new LiftLowBasketCommand(robot.lift, telemetry).schedule();
         }
         if (gamepad2.y) {
+            new DepositorBackCommand(robot.depositor, telemetry);
             new DepositSpecimenHighBarSequenceCommand(robot, telemetry).schedule();
         }
 
@@ -150,7 +152,7 @@ public class TeleOp extends LinearOpMode {
     private void drawRobot(BrainSTEMRobot robot) {
         TelemetryPacket packet = new TelemetryPacket();
         packet.fieldOverlay().setStroke("#3F51B5");
-        Drawing.drawRobot(packet.fieldOverlay(), robot.drive.pose);
+//        Drawing.drawRobot(packet.fieldOverlay(), robot.drive.pose);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 

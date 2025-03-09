@@ -15,8 +15,7 @@ public class GrabSpecimenSequenceCommand extends SequentialCommandGroup {
         super(
                 new LiftDeconflictCommand(robot.lift,telemetry),
                 new LiftGrabSpecimenCommand(robot.lift, telemetry),
-                new DepositorBackCommand(robot.depositor, telemetry),
-                new GripperOpenCommand(robot.depositor, telemetry)
+                new DepositorBackCommand(robot.depositor, telemetry)
         );
 
     }

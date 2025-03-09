@@ -25,7 +25,7 @@ public class LiftTele implements ComponentTele {
         public int SPECIMEN_LEVEL_HEIGHT = 95;
         public int LIFT_SPECIMEN_PRE_DEPOSIT_HEIGHT = 250;
         public int LIFT_SPECIMEN_HIGH_BAR_HEIGHT = 800;
-        public int HIGH_BAR_HEIGHT = 630;
+        public int HIGH_BAR_HEIGHT = 730;
         public int HIGH_BAR_RELEASE_HEIGHT = 545;
         public int HIGHBAR_PRE_HEIGHT = 375;
         public int TOLERANCE = 30;
